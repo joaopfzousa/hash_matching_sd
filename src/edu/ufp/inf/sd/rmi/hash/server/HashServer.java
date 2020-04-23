@@ -13,23 +13,22 @@ public class HashServer {
 
     private SetupContextRMI contextRMI;
 
-    private HashRI myRI;
-
     public static void main(String[] args) {
         if (args != null && args.length < 3) {
             System.exit(-1);
         } else {
+            assert args != null;
             HashServer srv = new HashServer(args);
             srv.rebindService();
         }
     }
 
 
-    public HashServer(String args[]) {
+    public HashServer(String[] args) {
         try {
-            String registryIP = args[0];
+            String registryIP   = args[0];
             String registryPort = args[1];
-            String serviceName = args[2];
+            String serviceName  = args[2];
             contextRMI = new SetupContextRMI(this.getClass(), registryIP, registryPort, new String[]{serviceName});
         } catch (RemoteException e) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, e);
@@ -40,9 +39,10 @@ public class HashServer {
         try {
             Registry registry = contextRMI.getRegistry();
             if (registry != null) {
-                myRI = new HashImpl();
+                DBMockup db = new DBMockup();
+                HashLoginRI digLibLoginRI = new HashLoginImpl(db);
                 String serviceUrl = contextRMI.getServicesUrl(0);
-                registry.rebind(serviceUrl, myRI);
+                registry.rebind(serviceUrl, digLibLoginRI);
             } else {
                 Logger.getLogger(this.getClass().getName()).log(Level.INFO, "registry not bound (check IPs). :(");
             }

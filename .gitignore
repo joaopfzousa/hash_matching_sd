@@ -12,4 +12,4 @@ out/
 .DS_Store
 
 #runscripts
-runscripts/
+/src/edu/ufp/inf/sd/rmi/hash/runscripts/

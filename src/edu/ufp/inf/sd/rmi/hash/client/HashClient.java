@@ -1,6 +1,8 @@
 package edu.ufp.inf.sd.rmi.hash.client;
 
-import edu.ufp.inf.sd.rmi.hash.server.HashRI;
+import edu.ufp.inf.sd.rmi.hash.server.HashLoginRI;
+import edu.ufp.inf.sd.rmi.hash.server.HashSessionImpl;
+import edu.ufp.inf.sd.rmi.hash.server.HashSessionRI;
 import edu.ufp.inf.sd.rmi.util.rmisetup.SetupContextRMI;
 
 import java.rmi.NotBoundException;
@@ -14,7 +16,8 @@ public class HashClient {
 
 
     private SetupContextRMI contextRMI;
-    private HashRI myRI;
+    private HashLoginRI hashLoginRI;
+
 
     public static void main(String[] args) {
         if (args != null && args.length < 2) {
@@ -42,22 +45,26 @@ public class HashClient {
             Registry registry = contextRMI.getRegistry();
             if (registry != null) {
                 String serviceUrl = contextRMI.getServicesUrl(0);
-                myRI = (HashRI) registry.lookup(serviceUrl);
+                hashLoginRI = (HashLoginRI) registry.lookup(serviceUrl);
             } else {
                 Logger.getLogger(this.getClass().getName()).log(Level.INFO, "registry not bound (check IPs). :(");
             }
         } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
-        return myRI;
+        return hashLoginRI;
     }
 
     private void playService() {
         try {
-            String msg = this.myRI.methodName();
-            System.out.println("methodName: " + msg);
+            HashSessionRI session = login("hugo","ufp");
+
         } catch (RemoteException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    private HashSessionRI login (String username, String password) throws RemoteException {
+        return hashLoginRI.login(username, password);
     }
 }
