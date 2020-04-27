@@ -4,6 +4,8 @@ import edu.ufp.inf.sd.rmi.hash.server.HashLoginRI;
 import edu.ufp.inf.sd.rmi.hash.server.HashSessionImpl;
 import edu.ufp.inf.sd.rmi.hash.server.HashSessionRI;
 import edu.ufp.inf.sd.rmi.util.rmisetup.SetupContextRMI;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
@@ -14,6 +16,10 @@ import java.util.logging.Logger;
 
 public class HashClient {
 
+
+    public Button loginButton;
+    public TextField passText;
+    public TextField userText;
 
     private SetupContextRMI contextRMI;
     private HashLoginRI hashLoginRI;
@@ -57,7 +63,7 @@ public class HashClient {
 
     private void playService() {
         try {
-            HashSessionRI session = login("hugo","ufp");
+            HashSessionRI session = login(userText.getText() ,passText.getText());
 
         } catch (RemoteException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
