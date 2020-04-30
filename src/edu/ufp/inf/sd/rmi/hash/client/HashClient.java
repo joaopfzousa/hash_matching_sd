@@ -14,7 +14,13 @@ import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class HashClient {
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+public class HashClient extends Application {
 
 
     public Button loginButton;
@@ -32,6 +38,8 @@ public class HashClient {
             HashClient clt = new HashClient(args);
             clt.lookupService();
             clt.playService();
+            launch(args);
+
         }
     }
 
@@ -72,5 +80,15 @@ public class HashClient {
 
     private HashSessionRI login (String username, String password) throws RemoteException {
         return hashLoginRI.login(username, password);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("graph_creator.fxml"));
+        Scene scene = new Scene(root);
+
+        primaryStage.setTitle("Graph Creator");
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 }
