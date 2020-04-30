@@ -1,18 +1,15 @@
 package edu.ufp.inf.sd.rmi.hash.server;
 
-/**
- *
- * @author rmoreira
- */
 public class User {
 
     private String uname;
     private String pword;
     private int credits;
 
-    public User(String uname, String pword) {
+    public User(String uname, String pword, int credits) {
         this.uname = uname;
         this.pword = pword;
+        this.credits = credits;
     }
 
     @Override
@@ -46,5 +43,13 @@ public class User {
      */
     public void setPword(String pword) {
         this.pword = pword;
+    }
+
+    public int getCredits() {
+        return credits;
+    }
+
+    public void setCredits(int credits) {
+        this.credits = credits;
     }
 }

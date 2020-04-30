@@ -4,8 +4,6 @@ import edu.ufp.inf.sd.rmi.hash.server.HashLoginRI;
 import edu.ufp.inf.sd.rmi.hash.server.HashSessionImpl;
 import edu.ufp.inf.sd.rmi.hash.server.HashSessionRI;
 import edu.ufp.inf.sd.rmi.util.rmisetup.SetupContextRMI;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
@@ -14,18 +12,7 @@ import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
-public class HashClient extends Application {
-
-
-    public Button loginButton;
-    public TextField passText;
-    public TextField userText;
+public class HashClient {
 
     private SetupContextRMI contextRMI;
     private HashLoginRI hashLoginRI;
@@ -38,8 +25,6 @@ public class HashClient extends Application {
             HashClient clt = new HashClient(args);
             clt.lookupService();
             clt.playService();
-            launch(args);
-
         }
     }
 
@@ -71,7 +56,7 @@ public class HashClient extends Application {
 
     private void playService() {
         try {
-            HashSessionRI session = login(userText.getText() ,passText.getText());
+            HashSessionRI session = login("joao", "ufp");
 
         } catch (RemoteException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
@@ -80,15 +65,5 @@ public class HashClient extends Application {
 
     private HashSessionRI login (String username, String password) throws RemoteException {
         return hashLoginRI.login(username, password);
-    }
-
-    @Override
-    public void start(Stage primaryStage) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("graph_creator.fxml"));
-        Scene scene = new Scene(root);
-
-        primaryStage.setTitle("Graph Creator");
-        primaryStage.setScene(scene);
-        primaryStage.show();
     }
 }

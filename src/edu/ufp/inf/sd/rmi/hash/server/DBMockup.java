@@ -19,10 +19,10 @@ public class DBMockup {
         users = new ArrayList();
 
         //Add one user
-        users.add(new User("guest", "ufp"));
-        users.add(new User("hugo", "ufp"));
-        users.add(new User("joao", "ufp"));
-        users.add(new User("manel", "ufp"));
+        users.add(new User("guest", "ufp",100));
+        users.add(new User("hugo", "ufp",200));
+        users.add(new User("joao", "ufp",10000));
+        users.add(new User("manel", "ufp",300));
     }
 
     /**
@@ -31,9 +31,9 @@ public class DBMockup {
      * @param u username
      * @param p passwd
      */
-    public void register(String u, String p) {
+    public void register(String u, String p, int credits) {
         if (!exists(u, p)) {
-            users.add(new User(u, p));
+            users.add(new User(u, p, credits));
         }
     }
 
