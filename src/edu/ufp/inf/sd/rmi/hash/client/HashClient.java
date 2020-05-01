@@ -1,7 +1,6 @@
 package edu.ufp.inf.sd.rmi.hash.client;
 
 import edu.ufp.inf.sd.rmi.hash.server.HashLoginRI;
-import edu.ufp.inf.sd.rmi.hash.server.HashSessionImpl;
 import edu.ufp.inf.sd.rmi.hash.server.HashSessionRI;
 import edu.ufp.inf.sd.rmi.util.rmisetup.SetupContextRMI;
 
@@ -9,6 +8,7 @@ import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,16 +18,6 @@ public class HashClient {
     private HashLoginRI hashLoginRI;
 
 
-    public static void main(String[] args) {
-        if (args != null && args.length < 2) {
-            System.exit(-1);
-        } else {
-            HashClient clt = new HashClient(args);
-            clt.lookupService();
-            clt.playService();
-        }
-    }
-
     public HashClient(String[] args) {
         try {
             String registryIP = args[0];
@@ -36,6 +26,16 @@ public class HashClient {
             contextRMI = new SetupContextRMI(this.getClass(), registryIP, registryPort, new String[]{serviceName});
         } catch (RemoteException e) {
             Logger.getLogger(HashClient.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }
+
+    public static void main(String[] args) {
+        if (args != null && args.length < 2) {
+            System.exit(-1);
+        } else {
+            HashClient clt = new HashClient(args);
+            clt.lookupService();
+            clt.playService();
         }
     }
 
@@ -56,14 +56,58 @@ public class HashClient {
 
     private void playService() {
         try {
-            HashSessionRI session = login("joao", "ufp");
+            Scanner in = new Scanner(System.in);
 
+            int option = 0;
+            System.out.println("Please insert your username:");
+            String user = in.nextLine();
+            System.out.println("Please insert your password:");
+            String password = in.nextLine();
+            HashSessionRI session = login(user, password);
+            if (session != null) {
+                System.out.println("Welcome " + user);
+                do {
+                    System.out.println("1-list task groups");
+                    System.out.println("2-create task group");
+                    System.out.println("3-delete task group");
+                    System.out.println("-1-exit");
+
+                    String op =in.nextLine();
+                    option = tryParseInt(op,0);
+
+                    switch (option)
+                    {
+                        case 1:
+                            break;
+                        case 2:
+                            break;
+                        case 3:
+                            break;
+                        case -1:
+                            hashLoginRI.logout(user);
+                            break;
+                        default:
+                            System.out.println("Wrong option");
+                    }
+                }while (option != -1);
+            } else {
+                System.out.println("[session] - No Session, Error credentials\n");
+            }
         } catch (RemoteException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private HashSessionRI login (String username, String password) throws RemoteException {
+    private HashSessionRI login(String username, String password) throws RemoteException {
         return hashLoginRI.login(username, password);
+    }
+
+
+    public int tryParseInt(String value, int defaultVal) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return defaultVal;
+        }
     }
 }

@@ -30,4 +30,10 @@ public class HashLoginImpl extends UnicastRemoteObject implements HashLoginRI {
 
         return null;
     }
+
+    @Override
+    public HashSessionRI logout(String username) throws RemoteException {
+        this.sessions.remove(username);
+        return null;
+    }
 }
