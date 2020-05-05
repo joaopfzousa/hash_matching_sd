@@ -66,22 +66,29 @@ public class HashClient {
             HashSessionRI session = login(user, password);
             if (session != null) {
                 System.out.println("Welcome " + user);
+                VisitorTaskGroupsOperationsI v1 = new VisitorTaskGroupsOperationsI();
                 do {
-                    System.out.println("1-list task groups");
-                    System.out.println("2-create task group");
-                    System.out.println("3-delete task group");
-                    System.out.println("-1-exit");
+                    System.out.println("[1] -> List task groups");
+                    System.out.println("[2] -> Create task group");
+                    System.out.println("[3] -> Pause task group");
+                    System.out.println("[4] -> Delete task group");
+                    System.out.println("[5] -> Join task group");
+                    System.out.println("[-1] -> Exit");
 
-                    String op =in.nextLine();
+                    String op = in.nextLine();
                     option = tryParseInt(op,0);
-
                     switch (option)
                     {
                         case 1:
+                            v1.taskGroup("list");
                             break;
                         case 2:
                             break;
                         case 3:
+                            break;
+                        case 4:
+                            break;
+                        case 5:
                             break;
                         case -1:
                             hashLoginRI.logout(user);
@@ -91,7 +98,7 @@ public class HashClient {
                     }
                 }while (option != -1);
             } else {
-                System.out.println("[session] - No Session, Error credentials\n");
+                System.out.println("[Session] - No Session, Error credentials\n");
             }
         } catch (RemoteException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
@@ -101,7 +108,6 @@ public class HashClient {
     private HashSessionRI login(String username, String password) throws RemoteException {
         return hashLoginRI.login(username, password);
     }
-
 
     public int tryParseInt(String value, int defaultVal) {
         try {

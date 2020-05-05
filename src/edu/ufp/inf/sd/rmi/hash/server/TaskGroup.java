@@ -18,10 +18,13 @@ public class TaskGroup {
 
     private String owner;
 
+    private boolean pause;
     //nº de linhas que vai partir
     private int subsets;
 
-    public TaskGroup(int id, ArrayList<User> users, String hash, String encryption, int strategy, int plafond, String owner, int subsets) {
+    private boolean solved;
+
+    public TaskGroup(int id, ArrayList<User> users, String hash, String encryption, int strategy, int plafond, String owner, int subsets, boolean pause, boolean solved) {
         this.id = id;
         this.users = users;
         this.hash = hash;
@@ -30,6 +33,8 @@ public class TaskGroup {
         this.plafond = plafond;
         this.owner = owner;
         this.subsets = subsets;
+        this.pause = pause;
+        this.solved = solved;
     }
 
     public int getId() {
@@ -94,5 +99,21 @@ public class TaskGroup {
 
     public void setSubsets(int subsets) {
         this.subsets = subsets;
+    }
+
+    public boolean isPause() {
+        return pause;
+    }
+
+    public void setPause(boolean pause) {
+        this.pause = pause;
+    }
+
+    public boolean isSolved() {
+        return solved;
+    }
+
+    public void setSolved(boolean solved) {
+        this.solved = solved;
     }
 }
