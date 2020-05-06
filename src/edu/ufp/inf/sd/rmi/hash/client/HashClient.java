@@ -1,7 +1,6 @@
 package edu.ufp.inf.sd.rmi.hash.client;
 
-import edu.ufp.inf.sd.rmi.hash.server.HashLoginRI;
-import edu.ufp.inf.sd.rmi.hash.server.HashSessionRI;
+import edu.ufp.inf.sd.rmi.hash.server.*;
 import edu.ufp.inf.sd.rmi.util.rmisetup.SetupContextRMI;
 
 import java.rmi.NotBoundException;
@@ -66,7 +65,7 @@ public class HashClient {
             HashSessionRI session = login(user, password);
             if (session != null) {
                 System.out.println("Welcome " + user);
-                VisitorTaskGroupsOperationsI v1 = new VisitorTaskGroupsOperationsI();
+                VisitorHashOperationsI v1 = new VisitorHashOperationsTaskGroups();
                 do {
                     System.out.println("[1] -> List task groups");
                     System.out.println("[2] -> Create task group");
@@ -80,9 +79,12 @@ public class HashClient {
                     switch (option)
                     {
                         case 1:
-                            v1.taskGroup("list");
+                            TaskInput tk = new TaskInput(option);
+                            var x = session.acceptVisitor(v1,tk);
+
                             break;
                         case 2:
+                            System.out.println("Please insert ");
                             break;
                         case 3:
                             break;

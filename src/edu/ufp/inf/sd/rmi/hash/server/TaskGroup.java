@@ -116,4 +116,20 @@ public class TaskGroup {
     public void setSolved(boolean solved) {
         this.solved = solved;
     }
+
+    @Override
+    public String toString() {
+        return "TaskGroup{" +
+                "id=" + id +
+                ", users=" + users +
+                ", hash='" + hash + '\'' +
+                ", encryption='" + encryption + '\'' +
+                ", strategy=" + strategy +
+                ", plafond=" + plafond +
+                ", owner='" + owner + '\'' +
+                ", pause=" + pause +
+                ", subsets=" + subsets +
+                ", solved=" + solved +
+                '}';
+    }
 }

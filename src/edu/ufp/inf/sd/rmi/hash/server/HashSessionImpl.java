@@ -13,4 +13,10 @@ public class HashSessionImpl extends UnicastRemoteObject implements HashSessionR
         super();
         this.database = db;
     }
+
+    @Override
+    public Object acceptVisitor(VisitorHashOperationsI visitor, TaskInput tk) throws RemoteException {
+        visitor.visitConcreteElementStateTasks(this, tk,this.database);
+        return null;
+    }
 }

@@ -11,6 +11,8 @@ public class DBMockup {
 
     private final ArrayList<User> users;// = new ArrayList();
 
+    private ArrayList<TaskGroup> taskGroups;// = new ArrayList<>();
+
     /**
      * This constructor creates and inits the database with some users.
      */
@@ -23,6 +25,10 @@ public class DBMockup {
         users.add(new User("hugo", "ufp",200));
         users.add(new User("joao", "ufp",10000));
         users.add(new User("manel", "ufp",300));
+
+        taskGroups = new ArrayList<>();
+
+        taskGroups.add(new TaskGroup(1,users,"aklshdakshdjkashdkjashd","asdasdasd",1,100000,"batatas",1000,false,false));
     }
 
     /**
@@ -54,5 +60,37 @@ public class DBMockup {
         //return ((u.equalsIgnoreCase("guest") && p.equalsIgnoreCase("ufp")) ? true : false);
     }
 
+    public ArrayList<TaskGroup> ListTaskGroups()
+    {
+        return  this.taskGroups;
+    }
 
+    public boolean AddTaskGroup(TaskGroup tg)
+    {
+        this.taskGroups.add(tg);
+                return true;
+    }
+
+    public boolean DeleteTaskGroup(TaskGroup tg)
+    {
+        if (this.taskGroups.contains(tg))
+        {
+            this.taskGroups.remove(tg);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean UpdateTaskGroup(TaskGroup tg)
+    {
+        for(TaskGroup tk : taskGroups)
+        {
+            if(tk.getId() == tg.getId())
+            {
+                ////todo
+                return true;
+            }
+        }
+        return false;
+    }
 }
