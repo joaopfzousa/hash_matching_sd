@@ -58,15 +58,23 @@ public class HashClient {
             Scanner in = new Scanner(System.in);
 
             int option = 0;
-            System.out.println("Please insert your username:");
+
+            System.out.println("\n\n-------------------------------------------");
+            System.out.println("-------- Hash Matching Colaborativo -------");
+            System.out.println("-------------------------------------------");
+
+            System.out.print("\nPlease insert your username: ");
             String user = in.nextLine();
-            System.out.println("Please insert your password:");
+            System.out.print("Please insert your password: ");
             String password = in.nextLine();
             HashSessionRI session = login(user, password);
             if (session != null) {
-                System.out.println("Welcome " + user);
+                System.out.println("\n\t\tWelcome " + user);
                 VisitorHashOperationsI v1 = new VisitorHashOperationsTaskGroups();
                 do {
+                    System.out.println("-------------------------------------------");
+                    System.out.println("------------------- Menu ------------------");
+                    System.out.println("-------------------------------------------");
                     System.out.println("[1] -> List task groups");
                     System.out.println("[2] -> Create task group");
                     System.out.println("[3] -> Pause task group");
