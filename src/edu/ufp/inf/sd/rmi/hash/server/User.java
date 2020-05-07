@@ -1,6 +1,8 @@
 package edu.ufp.inf.sd.rmi.hash.server;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 
     private String uname;
     private String pword;

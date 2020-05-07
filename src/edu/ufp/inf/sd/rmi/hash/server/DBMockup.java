@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 /**
  * This class simulates a DBMockup for managing users.
- *
- *
  */
 public class DBMockup {
 
@@ -27,8 +25,6 @@ public class DBMockup {
         users.add(new User("manel", "ufp",300));
 
         taskGroups = new ArrayList<>();
-
-        taskGroups.add(new TaskGroup(1,users,"aklshdakshdjkashdkjashd","asdasdasd",1,100000,"batatas",1000,false,false));
     }
 
     /**
@@ -68,7 +64,7 @@ public class DBMockup {
     public boolean AddTaskGroup(TaskGroup tg)
     {
         this.taskGroups.add(tg);
-                return true;
+        return true;
     }
 
     public boolean DeleteTaskGroup(TaskGroup tg)

@@ -1,8 +1,9 @@
 package edu.ufp.inf.sd.rmi.hash.server;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class TaskGroup {
+public class TaskGroup implements Serializable {
 
     private int id;
 
@@ -10,7 +11,7 @@ public class TaskGroup {
 
     private String hash;
 
-    private String encryption;
+    private Integer encryption;
 
     private int strategy;
 
@@ -24,7 +25,15 @@ public class TaskGroup {
 
     private boolean solved;
 
-    public TaskGroup(int id, ArrayList<User> users, String hash, String encryption, int strategy, int plafond, String owner, int subsets, boolean pause, boolean solved) {
+    public TaskGroup(String hash, Integer encryption, int plafond, String owner) {
+        this.users = new ArrayList<>();
+        this.hash = hash;
+        this.encryption = encryption;
+        this.plafond = plafond;
+        this.owner = owner;
+    }
+
+    public TaskGroup(int id, ArrayList<User> users, String hash, Integer encryption, int strategy, int plafond, String owner, boolean pause, int subsets, boolean solved) {
         this.id = id;
         this.users = users;
         this.hash = hash;
@@ -32,8 +41,8 @@ public class TaskGroup {
         this.strategy = strategy;
         this.plafond = plafond;
         this.owner = owner;
-        this.subsets = subsets;
         this.pause = pause;
+        this.subsets = subsets;
         this.solved = solved;
     }
 
@@ -61,11 +70,11 @@ public class TaskGroup {
         this.hash = hash;
     }
 
-    public String getEncryption() {
+    public Integer getEncryption() {
         return encryption;
     }
 
-    public void setEncryption(String encryption) {
+    public void setEncryption(Integer encryption) {
         this.encryption = encryption;
     }
 
@@ -121,14 +130,12 @@ public class TaskGroup {
     public String toString() {
         return "TaskGroup{" +
                 "id=" + id +
-                ", users=" + users +
                 ", hash='" + hash + '\'' +
                 ", encryption='" + encryption + '\'' +
                 ", strategy=" + strategy +
                 ", plafond=" + plafond +
                 ", owner='" + owner + '\'' +
                 ", pause=" + pause +
-                ", subsets=" + subsets +
                 ", solved=" + solved +
                 '}';
     }

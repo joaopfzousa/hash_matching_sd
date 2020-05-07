@@ -7,6 +7,7 @@ import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -82,17 +83,56 @@ public class HashClient {
                     System.out.println("[5] -> Join task group");
                     System.out.println("[-1] -> Exit");
 
+                    System.out.print("Option: ");
                     String op = in.nextLine();
                     option = tryParseInt(op,0);
+                    TaskInput tk = new TaskInput(option);
                     switch (option)
                     {
                         case 1:
-                            TaskInput tk = new TaskInput(option);
-                            var x = session.acceptVisitor(v1,tk);
+                            ArrayList<TaskGroup> tasks = (ArrayList<TaskGroup>) session.acceptVisitor(v1,tk);
 
+                            for(TaskGroup tg : tasks)
+                            {
+                                System.out.println(tg);
+                            }
                             break;
                         case 2:
-                            System.out.println("Please insert ");
+                            System.out.println("-----> Please insert TaskGroup <-----");
+                            System.out.print("Insert Hash: ");
+                            String hash = in.nextLine();
+
+                            System.out.println("[1] -> SHA-512");
+                            System.out.println("[2] -> PBKDF2");
+                            System.out.println("[3] -> BCrypt");
+                            System.out.println("[4] -> SCrypt");
+
+                            System.out.print("Insert Encryption: ");
+                            Integer encryption = tryParseInt(in.nextLine(), 0);
+
+                            while(encryption < 1 || encryption > 4)
+                            {
+                                System.out.println("This id not exists");
+                                System.out.print("Insert Encryption: ");
+                                encryption = tryParseInt(in.nextLine(), 0);
+                            }
+
+                            System.out.print("Insert Plafond: ");
+                            Integer plafond = tryParseInt(in.nextLine(), 10);
+
+                            TaskGroup taskGroup = new TaskGroup(hash, encryption, plafond, user);
+
+                            tk = new TaskInput(option, taskGroup);
+
+                            boolean create = (boolean) session.acceptVisitor(v1,tk);
+
+                            System.out.println();
+                            if(create == true)
+                            {
+                                System.out.println("Create TaskGroup sucessfully!");
+                            }else{
+                                System.out.println("TakGroup not created!");
+                            }
                             break;
                         case 3:
                             break;

@@ -7,9 +7,7 @@ import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public class HashServer {
-
 
     private SetupContextRMI contextRMI;
 
@@ -22,7 +20,6 @@ public class HashServer {
             srv.rebindService();
         }
     }
-
 
     public HashServer(String[] args) {
         try {
