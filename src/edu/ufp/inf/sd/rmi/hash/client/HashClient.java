@@ -57,99 +57,134 @@ public class HashClient {
     private void playService() {
         try {
             Scanner in = new Scanner(System.in);
-
             int option = 0;
 
             System.out.println("\n\n-------------------------------------------");
             System.out.println("-------- Hash Matching Colaborativo -------");
             System.out.println("-------------------------------------------");
 
-            System.out.print("\nPlease insert your username: ");
-            String user = in.nextLine();
-            System.out.print("Please insert your password: ");
-            String password = in.nextLine();
-            HashSessionRI session = login(user, password);
-            if (session != null) {
-                System.out.println("\n\t\tWelcome " + user);
-                VisitorHashOperationsI v1 = new VisitorHashOperationsTaskGroups();
-                do {
-                    System.out.println("-------------------------------------------");
-                    System.out.println("------------------- Menu ------------------");
-                    System.out.println("-------------------------------------------");
-                    System.out.println("[1] -> List task groups");
-                    System.out.println("[2] -> Create task group");
-                    System.out.println("[3] -> Pause task group");
-                    System.out.println("[4] -> Delete task group");
-                    System.out.println("[5] -> Join task group");
-                    System.out.println("[-1] -> Exit");
+            do {
+                System.out.println("\n-----> Please Register/Login <-----\n");
+                System.out.println("[1] -> Register");
+                System.out.println("[2] -> Login");
+                System.out.println("[-1] -> Exit\n");
 
-                    System.out.print("Option: ");
-                    String op = in.nextLine();
-                    option = tryParseInt(op,0);
-                    TaskInput tk = new TaskInput(option);
-                    switch (option)
-                    {
-                        case 1:
-                            ArrayList<TaskGroup> tasks = (ArrayList<TaskGroup>) session.acceptVisitor(v1,tk);
+                System.out.print("Option: ");
+                String opt = in.nextLine();
+                option = tryParseInt(opt,0);
+                switch (option)
+                {
+                    case 1:
+                        System.out.println("\n-----> Please Register new User <-----\n");
+                        System.out.print("Insert Username: ");
+                        String username = in.nextLine();
+                        System.out.print("Insert Password: ");
+                        String pass = in.nextLine();
+                        System.out.print("Insert Credits: ");
+                        Integer credits = tryParseInt(in.nextLine(), 100);
+                        boolean isregisted = hashLoginRI.register(username, pass, credits);
 
-                            for(TaskGroup tg : tasks)
-                            {
-                                System.out.println(tg);
-                            }
-                            break;
-                        case 2:
-                            System.out.println("-----> Please insert TaskGroup <-----");
-                            System.out.print("Insert Hash: ");
-                            String hash = in.nextLine();
+                        if(isregisted == true){
+                            System.out.println("User successfully registered!\n");
+                        }else{
+                            System.out.println("User not registed!\n");
+                        }
+                        break;
+                    case 2:
+                        System.out.println("\n-------> Please Login <---------\n");
+                        System.out.print("\nPlease insert your username: ");
+                        String user = in.nextLine();
+                        System.out.print("Please insert your password: ");
+                        String password = in.nextLine();
+                        HashSessionRI session = login(user, password);
+                        if (session != null) {
+                            System.out.println("\n\t\tWelcome " + user);
+                            VisitorHashOperationsI v1 = new VisitorHashOperationsTaskGroups();
+                            do {
+                                System.out.println("-------------------------------------------");
+                                System.out.println("------------------- Menu ------------------");
+                                System.out.println("-------------------------------------------");
+                                System.out.println("[1] -> List task groups");
+                                System.out.println("[2] -> Create task group");
+                                System.out.println("[3] -> Pause task group");
+                                System.out.println("[4] -> Delete task group");
+                                System.out.println("[5] -> Join task group");
+                                System.out.println("[-1] -> Exit\n");
 
-                            System.out.println("[1] -> SHA-512");
-                            System.out.println("[2] -> PBKDF2");
-                            System.out.println("[3] -> BCrypt");
-                            System.out.println("[4] -> SCrypt");
+                                System.out.print("Option: ");
+                                String op = in.nextLine();
+                                option = tryParseInt(op,0);
+                                TaskInput tk = new TaskInput(option);
+                                switch (option)
+                                {
+                                    case 1:
+                                        ArrayList<TaskGroup> tasks = (ArrayList<TaskGroup>) session.acceptVisitor(v1,tk);
 
-                            System.out.print("Insert Encryption: ");
-                            Integer encryption = tryParseInt(in.nextLine(), 0);
+                                        for(TaskGroup tg : tasks)
+                                        {
+                                            System.out.println(tg);
+                                        }
+                                        break;
+                                    case 2:
+                                        System.out.println("-----> Please insert TaskGroup <-----");
+                                        System.out.print("Insert Hash: ");
+                                        String hash = in.nextLine();
 
-                            while(encryption < 1 || encryption > 4)
-                            {
-                                System.out.println("This id not exists");
-                                System.out.print("Insert Encryption: ");
-                                encryption = tryParseInt(in.nextLine(), 0);
-                            }
+                                        System.out.println("[1] -> SHA-512");
+                                        System.out.println("[2] -> PBKDF2");
+                                        System.out.println("[3] -> BCrypt");
+                                        System.out.println("[4] -> SCrypt");
 
-                            System.out.print("Insert Plafond: ");
-                            Integer plafond = tryParseInt(in.nextLine(), 10);
+                                        System.out.print("Insert Encryption: ");
+                                        Integer encryption = tryParseInt(in.nextLine(), 0);
 
-                            TaskGroup taskGroup = new TaskGroup(hash, encryption, plafond, user);
+                                        while(encryption < 1 || encryption > 4)
+                                        {
+                                            System.out.println("This id not exists");
+                                            System.out.print("Insert Encryption: ");
+                                            encryption = tryParseInt(in.nextLine(), 0);
+                                        }
 
-                            tk = new TaskInput(option, taskGroup);
+                                        System.out.print("Insert Plafond: ");
+                                        Integer plafond = tryParseInt(in.nextLine(), 10);
 
-                            boolean create = (boolean) session.acceptVisitor(v1,tk);
+                                        TaskGroup taskGroup = new TaskGroup(hash, encryption, plafond, user);
 
-                            System.out.println();
-                            if(create == true)
-                            {
-                                System.out.println("Create TaskGroup sucessfully!");
-                            }else{
-                                System.out.println("TakGroup not created!");
-                            }
-                            break;
-                        case 3:
-                            break;
-                        case 4:
-                            break;
-                        case 5:
-                            break;
-                        case -1:
-                            hashLoginRI.logout(user);
-                            break;
-                        default:
-                            System.out.println("Wrong option");
-                    }
-                }while (option != -1);
-            } else {
-                System.out.println("[Session] - No Session, Error credentials\n");
-            }
+                                        tk = new TaskInput(option, taskGroup);
+
+                                        boolean create = (boolean) session.acceptVisitor(v1,tk);
+
+                                        System.out.println();
+                                        if(create == true)
+                                        {
+                                            System.out.println("Created TaskGroup sucessfully!");
+                                        }else{
+                                            System.out.println("TakGroup not created!");
+                                        }
+                                        break;
+                                    case 3:
+                                        break;
+                                    case 4:
+                                        break;
+                                    case 5:
+                                        break;
+                                    case -1:
+                                        hashLoginRI.logout(user);
+                                        break;
+                                    default:
+                                        System.out.println("Wrong option");
+                                }
+                            }while (option != -1);
+                        } else {
+                            System.out.println("[Session] - No Session, Error credentials\n");
+                        }
+                        break;
+                    case -1:
+                        break;
+                    default:
+                        System.out.println("Wrong option");
+                }
+            }while (option != -1);
         } catch (RemoteException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }

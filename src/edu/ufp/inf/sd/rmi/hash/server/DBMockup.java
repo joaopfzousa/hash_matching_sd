@@ -32,11 +32,14 @@ public class DBMockup {
      *
      * @param u username
      * @param p passwd
+     * @param credits n creditos
      */
-    public void register(String u, String p, int credits) {
+    public boolean register(String u, String p, int credits) {
         if (!exists(u, p)) {
             users.add(new User(u, p, credits));
+            return true;
         }
+        return false;
     }
 
     /**
