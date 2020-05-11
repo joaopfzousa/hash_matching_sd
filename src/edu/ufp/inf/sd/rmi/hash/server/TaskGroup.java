@@ -7,7 +7,7 @@ public class TaskGroup implements Serializable {
 
     private int id;
 
-    private ArrayList<User> users;
+    private ArrayList<String> users;
 
     private String hash;
 
@@ -23,6 +23,8 @@ public class TaskGroup implements Serializable {
     //nº de linhas que vai partir
     private int subsets;
 
+    private int line;
+
     private boolean solved;
 
     public TaskGroup(String hash, Integer encryption, int plafond, String owner) {
@@ -33,7 +35,7 @@ public class TaskGroup implements Serializable {
         this.owner = owner;
     }
 
-    public TaskGroup(int id, ArrayList<User> users, String hash, Integer encryption, int strategy, int plafond, String owner, boolean pause, int subsets, boolean solved) {
+    public TaskGroup(int id, ArrayList<String> users, String hash, Integer encryption, int strategy, int plafond, String owner, boolean pause, int subsets, boolean solved) {
         this.id = id;
         this.users = users;
         this.hash = hash;
@@ -54,11 +56,11 @@ public class TaskGroup implements Serializable {
         this.id = id;
     }
 
-    public ArrayList<User> getUsers() {
+    public ArrayList<String> getUsers() {
         return users;
     }
 
-    public void setUsers(ArrayList<User> users) {
+    public void setUsers(ArrayList<String> users) {
         this.users = users;
     }
 
@@ -124,6 +126,14 @@ public class TaskGroup implements Serializable {
 
     public void setSolved(boolean solved) {
         this.solved = solved;
+    }
+
+    public int getLine() {
+        return line;
+    }
+
+    public void setLine(int line) {
+        this.line = line;
     }
 
     @Override

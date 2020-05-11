@@ -33,12 +33,35 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
             tg.setId(id);
             tg.setPause(false);
             tg.setSolved(false);
-            tg.setSubsets(100);
+            tg.setSubsets(1000);
+            tg.setLine(1);
 
             db.AddTaskGroup(tg);
         }catch (Exception e){
-            System.out.println("[visitConcreteElementStateTasks] - Create: " + e);
+            System.out.println("[SingletonOperationsTaskGroups] - Create: " + e);
         }
         return true;
+    }
+
+    @Override
+    public WorkerInput JoinTaskGroup(TaskInput tk, DBMockup db) {
+        try{
+            TaskGroup tg = db.ListTaskGroups().get(tk.getId());
+            System.out.println(tg);
+
+            boolean join = db.JoinWorkerinTaskGroup(tg, tk.getUsername());
+
+            if(join)
+            {
+                WorkerInput wi = new WorkerInput(tg.getLine(), tg.getSubsets(), tg.getHash(), tg.getEncryption(), tg.getStrategy(), "./files/passwords.txt");
+
+                tg.setLine(tg.getLine() + tg.getSubsets());
+
+                return wi;
+            }
+        }catch (Exception e){
+            System.out.println("[SingletonOperationsTaskGroups] - Join: " + e);
+        }
+        return null;
     }
 }

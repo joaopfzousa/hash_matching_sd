@@ -92,4 +92,10 @@ public class DBMockup {
         }
         return false;
     }
+
+    public boolean JoinWorkerinTaskGroup(TaskGroup tg, String u)
+    {
+        tg.getUsers().add(u);
+        return true;
+    }
 }

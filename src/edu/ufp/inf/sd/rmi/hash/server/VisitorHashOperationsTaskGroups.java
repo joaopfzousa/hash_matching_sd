@@ -14,6 +14,12 @@ public class VisitorHashOperationsTaskGroups implements VisitorHashOperationsI, 
                 return sTaskGroup.ListTaskGroup(db);
             case 2:
                 return sTaskGroup.CreateTaskGroup(tk, db);
+            case 3:
+                // pause
+            case 4:
+                // delete
+            case 5:
+                return sTaskGroup.JoinTaskGroup(tk, db);
         }
         return null;
     }

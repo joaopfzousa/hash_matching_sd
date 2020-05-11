@@ -167,6 +167,38 @@ public class HashClient {
                                     case 4:
                                         break;
                                     case 5:
+                                        tk.setOption(1);
+                                        ArrayList<TaskGroup> join_tasks = (ArrayList<TaskGroup>) session.acceptVisitor(v1,tk);
+
+                                        for(TaskGroup tg : join_tasks)
+                                        {
+                                            System.out.println("Id da TaskGroup = " + tg.getId());
+                                        }
+
+                                        System.out.print("Insert id: ");
+                                        Integer id = tryParseInt(in.nextLine(), 0);
+
+                                        boolean idexist = false;
+                                        for(TaskGroup tg : join_tasks)
+                                        {
+                                            if(tg.getId() == id)
+                                            {
+                                                idexist = true;
+                                                break;
+                                            }
+                                        }
+
+                                        while(idexist == false)
+                                        {
+                                            System.out.println("This id not exists");
+                                            System.out.print("Insert id: ");
+                                            id = tryParseInt(in.nextLine(), 0);
+                                        }
+
+                                        tk = new TaskInput(id, option, user);
+
+                                        WorkerInput wi = (WorkerInput) session.acceptVisitor(v1,tk);
+                                        System.out.println(wi);
                                         break;
                                     case -1:
                                         hashLoginRI.logout(user);
