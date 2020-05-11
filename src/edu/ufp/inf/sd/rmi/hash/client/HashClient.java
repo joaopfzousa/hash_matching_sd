@@ -67,7 +67,7 @@ public class HashClient {
                 System.out.println("\n-----> Please Register/Login <-----\n");
                 System.out.println("[1] -> Register");
                 System.out.println("[2] -> Login");
-                System.out.println("[-1] -> Exit\n");
+                System.out.println("[0] -> Exit\n");
 
                 System.out.print("Option: ");
                 String opt = in.nextLine();
@@ -179,12 +179,12 @@ public class HashClient {
                             System.out.println("[Session] - No Session, Error credentials\n");
                         }
                         break;
-                    case -1:
+                    case 0:
                         break;
                     default:
                         System.out.println("Wrong option");
                 }
-            }while (option != -1);
+            }while (option != 0);
         } catch (RemoteException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
