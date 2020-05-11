@@ -7,10 +7,15 @@ import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static edu.ufp.inf.sd.rmi.hash.helpers.sha.SHAExample.getSalt;
+import static edu.ufp.inf.sd.rmi.hash.helpers.sha.SHAExample.get_SHA_512_SecurePassword;
 
 public class HashClient {
 
@@ -71,9 +76,8 @@ public class HashClient {
 
                 System.out.print("Option: ");
                 String opt = in.nextLine();
-                option = tryParseInt(opt,0);
-                switch (option)
-                {
+                option = tryParseInt(opt, 0);
+                switch (option) {
                     case 1:
                         System.out.println("\n-----> Please Register new User <-----\n");
                         System.out.print("Insert Username: ");
@@ -84,9 +88,9 @@ public class HashClient {
                         Integer credits = tryParseInt(in.nextLine(), 100);
                         boolean isregisted = hashLoginRI.register(username, pass, credits);
 
-                        if(isregisted == true){
+                        if (isregisted == true) {
                             System.out.println("User successfully registered!\n");
-                        }else{
+                        } else {
                             System.out.println("User not registed!\n");
                         }
                         break;
@@ -113,15 +117,13 @@ public class HashClient {
 
                                 System.out.print("Option: ");
                                 String op = in.nextLine();
-                                option = tryParseInt(op,0);
+                                option = tryParseInt(op, 0);
                                 TaskInput tk = new TaskInput(option);
-                                switch (option)
-                                {
+                                switch (option) {
                                     case 1:
-                                        ArrayList<TaskGroup> tasks = (ArrayList<TaskGroup>) session.acceptVisitor(v1,tk);
+                                        ArrayList<TaskGroup> tasks = (ArrayList<TaskGroup>) session.acceptVisitor(v1, tk);
 
-                                        for(TaskGroup tg : tasks)
-                                        {
+                                        for (TaskGroup tg : tasks) {
                                             System.out.println(tg);
                                         }
                                         break;
@@ -138,8 +140,7 @@ public class HashClient {
                                         System.out.print("Insert Encryption: ");
                                         Integer encryption = tryParseInt(in.nextLine(), 0);
 
-                                        while(encryption < 1 || encryption > 4)
-                                        {
+                                        while (encryption < 1 || encryption > 4) {
                                             System.out.println("This id not exists");
                                             System.out.print("Insert Encryption: ");
                                             encryption = tryParseInt(in.nextLine(), 0);
@@ -152,13 +153,12 @@ public class HashClient {
 
                                         tk = new TaskInput(option, taskGroup);
 
-                                        boolean create = (boolean) session.acceptVisitor(v1,tk);
+                                        boolean create = (boolean) session.acceptVisitor(v1, tk);
 
                                         System.out.println();
-                                        if(create == true)
-                                        {
+                                        if (create == true) {
                                             System.out.println("Created TaskGroup sucessfully!");
-                                        }else{
+                                        } else {
                                             System.out.println("TakGroup not created!");
                                         }
                                         break;
@@ -168,10 +168,9 @@ public class HashClient {
                                         break;
                                     case 5:
                                         tk.setOption(1);
-                                        ArrayList<TaskGroup> join_tasks = (ArrayList<TaskGroup>) session.acceptVisitor(v1,tk);
+                                        ArrayList<TaskGroup> join_tasks = (ArrayList<TaskGroup>) session.acceptVisitor(v1, tk);
 
-                                        for(TaskGroup tg : join_tasks)
-                                        {
+                                        for (TaskGroup tg : join_tasks) {
                                             System.out.println("Id da TaskGroup = " + tg.getId());
                                         }
 
@@ -179,17 +178,14 @@ public class HashClient {
                                         Integer id = tryParseInt(in.nextLine(), 0);
 
                                         boolean idexist = false;
-                                        for(TaskGroup tg : join_tasks)
-                                        {
-                                            if(tg.getId() == id)
-                                            {
+                                        for (TaskGroup tg : join_tasks) {
+                                            if (tg.getId() == id) {
                                                 idexist = true;
                                                 break;
                                             }
                                         }
 
-                                        while(idexist == false)
-                                        {
+                                        while (idexist == false) {
                                             System.out.println("This id not exists");
                                             System.out.print("Insert id: ");
                                             id = tryParseInt(in.nextLine(), 0);
@@ -197,8 +193,10 @@ public class HashClient {
 
                                         tk = new TaskInput(id, option, user);
 
-                                        WorkerInput wi = (WorkerInput) session.acceptVisitor(v1,tk);
+                                        WorkerInput wi = (WorkerInput) session.acceptVisitor(v1, tk);
                                         System.out.println(wi);
+
+                                        StartWorking(wi);
                                         break;
                                     case -1:
                                         hashLoginRI.logout(user);
@@ -206,7 +204,7 @@ public class HashClient {
                                     default:
                                         System.out.println("Wrong option");
                                 }
-                            }while (option != -1);
+                            } while (option != -1);
                         } else {
                             System.out.println("[Session] - No Session, Error credentials\n");
                         }
@@ -216,7 +214,7 @@ public class HashClient {
                     default:
                         System.out.println("Wrong option");
                 }
-            }while (option != 0);
+            } while (option != 0);
         } catch (RemoteException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
@@ -232,5 +230,39 @@ public class HashClient {
         } catch (NumberFormatException e) {
             return defaultVal;
         }
+    }
+
+    public boolean StartWorking(WorkerInput wi) {
+        try {
+            String securePassword = "";
+            switch (wi.getEncryption()) {
+                case (1):
+                    String salt = getSalt();
+                    String passwordToHash = "0000000";
+                    securePassword = get_SHA_512_SecurePassword("000000", salt);
+                    if (securePassword.compareTo(wi.getHash())==0)
+                    {
+                        //observer (descobri a password)
+                        //user recebe 10 créditos
+                        //para worker
+                    }
+                    else
+                    {
+                        //recebe 1 credito
+                    }
+                    System.out.println(securePassword);
+                case (2):
+                    MessageDigest md = MessageDigest.getInstance("SHA-512");
+                case (3):
+                    MessageDigest asd = MessageDigest.getInstance("SHA-512");
+                case (4):
+                    MessageDigest asdd = MessageDigest.getInstance("SHA-512");
+                    break;
+            }
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
