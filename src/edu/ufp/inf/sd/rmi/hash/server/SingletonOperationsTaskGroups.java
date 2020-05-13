@@ -53,7 +53,7 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
 
             if(join)
             {
-                WorkerInput wi = new WorkerInput(tg.getLine(), tg.getSubsets(), tg.getHash(), tg.getEncryption(), tg.getStrategy(), "./files/passwords.txt");
+                WorkerInput wi = new WorkerInput(tg.getLine(), tg.getSubsets(), tg.getHash(), tg.getEncryption(), tg.getStrategy(), "C:\\Users\\hugod\\IdeaProjects\\SD_Project\\files\\passwords.txt");
 
                 tg.setLine(tg.getLine() + tg.getSubsets());
 

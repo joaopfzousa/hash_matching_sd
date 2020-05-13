@@ -3,12 +3,12 @@ package edu.ufp.inf.sd.rmi.hash.client;
 import edu.ufp.inf.sd.rmi.hash.server.*;
 import edu.ufp.inf.sd.rmi.util.rmisetup.SetupContextRMI;
 
+import java.io.*;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -234,33 +234,45 @@ public class HashClient {
 
     public boolean StartWorking(WorkerInput wi) {
         try {
-            String securePassword = "";
-            switch (wi.getEncryption()) {
-                case (1):
-                    String salt = getSalt();
-                    String passwordToHash = "0000000";
-                    securePassword = get_SHA_512_SecurePassword("000000", salt);
-                    if (securePassword.compareTo(wi.getHash())==0)
-                    {
-                        //observer (descobri a password)
-                        //user recebe 10 créditos
-                        //para worker
-                    }
-                    else
-                    {
-                        //recebe 1 credito
-                    }
-                    System.out.println(securePassword);
-                case (2):
-                    MessageDigest md = MessageDigest.getInstance("SHA-512");
-                case (3):
-                    MessageDigest asd = MessageDigest.getInstance("SHA-512");
-                case (4):
-                    MessageDigest asdd = MessageDigest.getInstance("SHA-512");
-                    break;
-            }
+            File f = new File(wi.getFile());
+            String f1 = f.getAbsolutePath();
+            if (!f.isFile() || !f.canRead())
+                throw new IOException("can't read " + wi.getFile());
 
-        } catch (NoSuchAlgorithmException e) {
+            BufferedReader br = new BufferedReader(new FileReader(f));
+            try (LineNumberReader lnr = new LineNumberReader(br)) {
+                String line = null;
+                int lnum = 0;
+                while ((line = lnr.readLine()) != null && (lnum = lnr.getLineNumber()) < wi.getLine()) {
+                }
+
+
+                String securePassword = "";
+                switch (wi.getEncryption()) {
+                    case (1):
+                        String salt = getSalt();
+                        while ((line = lnr.readLine()) != null && (lnum = lnr.getLineNumber()) < wi.getLine() + wi.getSubset()) {
+                            String passwordToHash = line;
+                            securePassword = get_SHA_512_SecurePassword(passwordToHash, salt);
+                            if (securePassword.compareTo(wi.getHash()) == 0) {
+                                //observer (descobri a password)
+                                //user recebe 10 créditos
+                                //para worker
+                            } else {
+                                //recebe 1 credito
+                            }
+                            System.out.println(securePassword);
+                        }
+                    case (2):
+                        MessageDigest md = MessageDigest.getInstance("SHA-512");
+                    case (3):
+                        MessageDigest asd = MessageDigest.getInstance("SHA-512");
+                    case (4):
+                        MessageDigest asdd = MessageDigest.getInstance("SHA-512");
+                        break;
+                }
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
