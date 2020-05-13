@@ -194,7 +194,7 @@ public class HashClient {
                                         tk = new TaskInput(id, option, user);
 
                                         WorkerInput wi = (WorkerInput) session.acceptVisitor(v1, tk);
-                                        System.out.println(wi);
+                                        //System.out.println(wi);
 
                                         StartWorking(wi);
                                         break;
@@ -246,7 +246,6 @@ public class HashClient {
                 while ((line = lnr.readLine()) != null && (lnum = lnr.getLineNumber()) < wi.getLine()) {
                 }
 
-
                 String securePassword = "";
                 switch (wi.getEncryption()) {
                     case (1):
@@ -254,14 +253,16 @@ public class HashClient {
                         while ((line = lnr.readLine()) != null && (lnum = lnr.getLineNumber()) < wi.getLine() + wi.getSubset()) {
                             String passwordToHash = line;
                             securePassword = get_SHA_512_SecurePassword(passwordToHash, salt);
+
                             if (securePassword.compareTo(wi.getHash()) == 0) {
+                                System.out.println("Encontrei a hash na linha " + lnr.getLineNumber() + "!");
                                 //observer (descobri a password)
                                 //user recebe 10 créditos
                                 //para worker
                             } else {
                                 //recebe 1 credito
                             }
-                            System.out.println(securePassword);
+                            //System.out.println(securePassword);
                         }
                     case (2):
                         MessageDigest md = MessageDigest.getInstance("SHA-512");

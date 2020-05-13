@@ -34,7 +34,7 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
             tg.setPause(false);
             tg.setSolved(false);
             tg.setSubsets(1000);
-            tg.setLine(1);
+            tg.setLine(0);
 
             db.AddTaskGroup(tg);
         }catch (Exception e){
@@ -47,15 +47,14 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
     public WorkerInput JoinTaskGroup(TaskInput tk, DBMockup db) {
         try{
             TaskGroup tg = db.ListTaskGroups().get(tk.getId());
-            System.out.println(tg);
 
             boolean join = db.JoinWorkerinTaskGroup(tg, tk.getUsername());
 
             if(join)
             {
-                WorkerInput wi = new WorkerInput(tg.getLine(), tg.getSubsets(), tg.getHash(), tg.getEncryption(), tg.getStrategy(), "C:\\Users\\hugod\\IdeaProjects\\SD_Project\\files\\passwords.txt");
+                WorkerInput wi = new WorkerInput(tg.getLine(), tg.getSubsets(), tg.getHash(), tg.getEncryption(), tg.getStrategy(), "/Users/joaopfzousa/IdeaProjects/SD_Project/files/passwords.txt");
 
-                tg.setLine(tg.getLine() + tg.getSubsets());
+                tg.setLine(tg.getLine() + tg.getSubsets() + 1);
 
                 return wi;
             }

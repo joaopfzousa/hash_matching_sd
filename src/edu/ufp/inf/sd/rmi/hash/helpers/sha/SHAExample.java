@@ -30,9 +30,13 @@ public class SHAExample {
 	//Add salt
 	public static String getSalt() throws NoSuchAlgorithmException
 	{
-		SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-		byte[] salt = new byte[16];
-		sr.nextBytes(salt);
-		return salt.toString();
+		/*
+			SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+			byte[] salt = new byte[16];
+			sr.nextBytes(salt);
+			return salt.toString();
+		*/
+
+		return "[B@2096442d";
 	}
 }
