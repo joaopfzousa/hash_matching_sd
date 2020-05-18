@@ -33,7 +33,7 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
             tg.setId(id);
             tg.setPause(false);
             tg.setSolved(false);
-            tg.setSubsets(1000);
+            tg.setSubsets(10000);
             tg.setLine(0);
 
             db.AddTaskGroup(tg);

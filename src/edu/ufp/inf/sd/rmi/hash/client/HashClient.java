@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 import static edu.ufp.inf.sd.rmi.hash.helpers.advanced.ReallyStrongSecuredPassword.generateStrongPasswordHash;
 import static edu.ufp.inf.sd.rmi.hash.helpers.sha.SHAExample.get_SHA_512_SecurePassword;
 
-public class HashClient {
+public class HashClient extends Thread {
 
     private SetupContextRMI contextRMI;
     private HashLoginRI hashLoginRI;
@@ -168,6 +168,9 @@ public class HashClient {
                                     case 4:
                                         break;
                                     case 5:
+                                        System.out.print("Quantos workers quer inserir: ");
+                                        Integer nWorkers = tryParseInt(in.nextLine(), 1);
+
                                         tk.setOption(1);
                                         ArrayList<TaskGroup> join_tasks = (ArrayList<TaskGroup>) session.acceptVisitor(v1, tk);
 
@@ -192,12 +195,12 @@ public class HashClient {
                                             id = tryParseInt(in.nextLine(), 0);
                                         }
 
-                                        tk = new TaskInput(id, option, user);
+                                        for(int i = 0; i < nWorkers; i++)
+                                        {
+                                            Worker w = new Worker(user, id, option, session, v1);
+                                            w.start();
+                                        }
 
-                                        WorkerInput wi = (WorkerInput) session.acceptVisitor(v1, tk);
-                                        //System.out.println(wi);
-
-                                        StartWorking(wi);
                                         break;
                                     case -1:
                                         hashLoginRI.logout(user);
@@ -233,7 +236,8 @@ public class HashClient {
         }
     }
 
-    public boolean StartWorking(WorkerInput wi) {
+    public static boolean StartWorking(WorkerInput wi, long id) {
+        System.out.println("thread nº = " + id);
         try {
             File f = new File(wi.getFile());
             String f1 = f.getAbsolutePath();
@@ -251,6 +255,12 @@ public class HashClient {
                     case (1):
                         while ((line = lnr.readLine()) != null && lnr.getLineNumber() < wi.getLine() + wi.getSubset()) {
                             securePassword = get_SHA_512_SecurePassword(line);
+
+                            if(lnr.getLineNumber() == 100 || lnr.getLineNumber() == 10010)
+                            {
+                                System.out.println(" hash = " + securePassword);
+                            }
+
                             if (securePassword.compareTo(wi.getHash()) == 0) {
                                 System.out.println("Encontrei a hash na linha " + lnr.getLineNumber() + "!");
                                 //observer (descobri a password)
@@ -261,6 +271,7 @@ public class HashClient {
                             }
                             //System.out.println(securePassword);
                         }
+                        break;
                     case (2):
                         while ((line = lnr.readLine()) != null && lnr.getLineNumber() < wi.getLine() + wi.getSubset()) {
                             securePassword = generateStrongPasswordHash(line);
