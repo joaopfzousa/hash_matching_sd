@@ -1,6 +1,8 @@
 package edu.ufp.inf.sd.rmi.hash.client;
 
+import edu.ufp.inf.sd.rmi.hash.helpers.bcrypt.BCrypt;
 import edu.ufp.inf.sd.rmi.hash.server.*;
+import edu.ufp.inf.sd.rmi.util.lambdaworks.crypto.SCryptUtil;
 import edu.ufp.inf.sd.rmi.util.rmisetup.SetupContextRMI;
 
 import java.io.*;
@@ -8,13 +10,12 @@ import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static edu.ufp.inf.sd.rmi.hash.helpers.sha.SHAExample.getSalt;
+import static edu.ufp.inf.sd.rmi.hash.helpers.advanced.ReallyStrongSecuredPassword.generateStrongPasswordHash;
 import static edu.ufp.inf.sd.rmi.hash.helpers.sha.SHAExample.get_SHA_512_SecurePassword;
 
 public class HashClient {
@@ -241,19 +242,15 @@ public class HashClient {
 
             BufferedReader br = new BufferedReader(new FileReader(f));
             try (LineNumberReader lnr = new LineNumberReader(br)) {
-                String line = null;
-                int lnum = 0;
-                while ((line = lnr.readLine()) != null && (lnum = lnr.getLineNumber()) < wi.getLine()) {
+                String line;
+                while (lnr.readLine() != null && lnr.getLineNumber() < wi.getLine()) {
                 }
 
                 String securePassword = "";
                 switch (wi.getEncryption()) {
                     case (1):
-                        String salt = getSalt();
-                        while ((line = lnr.readLine()) != null && (lnum = lnr.getLineNumber()) < wi.getLine() + wi.getSubset()) {
-                            String passwordToHash = line;
-                            securePassword = get_SHA_512_SecurePassword(passwordToHash, salt);
-
+                        while ((line = lnr.readLine()) != null && lnr.getLineNumber() < wi.getLine() + wi.getSubset()) {
+                            securePassword = get_SHA_512_SecurePassword(line);
                             if (securePassword.compareTo(wi.getHash()) == 0) {
                                 System.out.println("Encontrei a hash na linha " + lnr.getLineNumber() + "!");
                                 //observer (descobri a password)
@@ -265,11 +262,50 @@ public class HashClient {
                             //System.out.println(securePassword);
                         }
                     case (2):
-                        MessageDigest md = MessageDigest.getInstance("SHA-512");
+                        while ((line = lnr.readLine()) != null && lnr.getLineNumber() < wi.getLine() + wi.getSubset()) {
+                            securePassword = generateStrongPasswordHash(line);
+
+                            if (securePassword.compareTo(wi.getHash()) == 0) {
+                                System.out.println("Encontrei a hash na linha " + lnr.getLineNumber() + "!");
+                                //observer (descobri a password)
+                                //user recebe 10 créditos
+                                //para worker
+                            } else {
+                                //recebe 1 credito
+                            }
+                            //System.out.println(securePassword);
+                        }
+
+                        break;
                     case (3):
-                        MessageDigest asd = MessageDigest.getInstance("SHA-512");
+                        while ((line = lnr.readLine()) != null && lnr.getLineNumber() < wi.getLine() + wi.getSubset()) {
+                            securePassword = BCrypt.hashpw(line, BCrypt.gensalt(12));
+
+                            if (securePassword.compareTo(wi.getHash()) == 0) {
+                                System.out.println("Encontrei a hash na linha " + lnr.getLineNumber() + "!");
+                                //observer (descobri a password)
+                                //user recebe 10 créditos
+                                //para worker
+                            } else {
+                                //recebe 1 credito
+                            }
+                            //System.out.println(securePassword);
+                        }
+                        break;
                     case (4):
-                        MessageDigest asdd = MessageDigest.getInstance("SHA-512");
+                        while ((line = lnr.readLine()) != null && lnr.getLineNumber() < wi.getLine() + wi.getSubset()) {
+                            securePassword =  SCryptUtil.scrypt(line, 16, 16, 16);
+                            if (securePassword.compareTo(wi.getHash()) == 0) {
+                                System.out.println("Encontrei a hash na linha " + lnr.getLineNumber() + "!");
+                                //observer (descobri a password)
+                                //user recebe 10 créditos
+                                //para worker
+                            } else {
+                                //recebe 1 credito
+                            }
+                            //System.out.println(securePassword);
+                        }
+
                         break;
                 }
             }

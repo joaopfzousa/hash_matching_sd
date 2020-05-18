@@ -2,12 +2,11 @@ package edu.ufp.inf.sd.rmi.hash.helpers.sha;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 
-public class SHAExample {
+public final class SHAExample {
 	
-	public static String get_SHA_512_SecurePassword(String passwordToHash, String salt)
-	{
+	public static String get_SHA_512_SecurePassword(String passwordToHash) throws NoSuchAlgorithmException {
+		String salt = getSalt();
 		String generatedPassword = null;
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-512");
