@@ -22,7 +22,7 @@ public class HashClient extends Thread {
 
     private SetupContextRMI contextRMI;
     private HashLoginRI hashLoginRI;
-
+    private ObserverImpl observer;
 
     public HashClient(String[] args) {
         try {
@@ -111,7 +111,7 @@ public class HashClient extends Thread {
                                 System.out.println("-------------------------------------------");
                                 System.out.println("[1] -> List task groups");
                                 System.out.println("[2] -> Create task group");
-                                System.out.println("[3] -> Pause task group");
+                                System.out.println("[3] -> (Un)Pause task group");
                                 System.out.println("[4] -> Delete task group");
                                 System.out.println("[5] -> Join task group");
                                 System.out.println("[-1] -> Exit\n");
@@ -164,6 +164,34 @@ public class HashClient extends Thread {
                                         }
                                         break;
                                     case 3:
+                                        tk.setOption(1);
+                                        ArrayList<TaskGroup> join_tasks_pause = (ArrayList<TaskGroup>) session.acceptVisitor(v1, tk);
+
+                                        for (TaskGroup tg : join_tasks_pause) {
+                                            System.out.println("Id da TaskGroup = " + tg.getId());
+                                        }
+
+                                        System.out.print("Insert id: ");
+                                        Integer idtask = tryParseInt(in.nextLine(), 0);
+
+                                        boolean idexisttask = false;
+                                        for (TaskGroup tg : join_tasks_pause) {
+                                            if (tg.getId() == idtask) {
+                                                idexisttask = true;
+                                                break;
+                                            }
+                                        }
+
+                                        while (idexisttask == false) {
+                                            System.out.println("This id not exists");
+                                            System.out.print("Insert id: ");
+                                            idtask = tryParseInt(in.nextLine(), 0);
+                                        }
+
+                                        tk = new TaskInput(idtask, option);
+
+                                        boolean pause = (boolean) session.acceptVisitor(v1, tk);
+
                                         break;
                                     case 4:
                                         break;

@@ -93,6 +93,19 @@ public class DBMockup {
         return false;
     }
 
+    public boolean PauseTaskGroup(TaskGroup tg)
+    {
+        for(TaskGroup tk : taskGroups)
+        {
+            if(tk.getId() == tg.getId())
+            {
+                tk.setPause(!tk.isPause());
+                return tk.isPause();
+            }
+        }
+        return false;
+    }
+
     public boolean JoinWorkerinTaskGroup(TaskGroup tg, String u)
     {
         tg.getUsers().add(u);

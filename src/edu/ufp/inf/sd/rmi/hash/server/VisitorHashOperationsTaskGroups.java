@@ -1,10 +1,6 @@
 package edu.ufp.inf.sd.rmi.hash.server;
 
-import edu.ufp.inf.sd.rmi.hash.client.ObserverRI;
-
 import java.io.Serializable;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
 
 public class VisitorHashOperationsTaskGroups implements VisitorHashOperationsI, Serializable {
     @Override

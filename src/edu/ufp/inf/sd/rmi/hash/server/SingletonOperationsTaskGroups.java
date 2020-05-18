@@ -63,4 +63,16 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
         }
         return null;
     }
+
+    @Override
+    public boolean PauseTaskGroup(TaskInput tk, DBMockup db) {
+        try{
+            TaskGroup tg = db.ListTaskGroups().get(tk.getId());
+
+            return db.PauseTaskGroup(tg);
+        }catch (Exception e){
+            System.out.println("[SingletonOperationsTaskGroups] - (Un)Pause: " + e);
+        }
+        return false;
+    }
 }
