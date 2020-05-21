@@ -35,11 +35,13 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
             tg.setSolved(false);
             tg.setSubsets(10000);
             tg.setLine(0);
+
             for(User u : db.getUsers())
             {
-                if (u.getUname().compareTo(tk.getUsername())==0)
+                if (u.getUname().compareTo(tk.getTasksGroup().getOwner())==0)
                     tg.setPlafond(u.getCredits());
             }
+
             db.AddTaskGroup(tg);
         }catch (Exception e){
             System.out.println("[SingletonOperationsTaskGroups] - Create: " + e);
