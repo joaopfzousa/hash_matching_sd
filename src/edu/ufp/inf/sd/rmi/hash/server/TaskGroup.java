@@ -27,11 +27,10 @@ public class TaskGroup implements Serializable {
 
     private boolean solved;
 
-    public TaskGroup(String hash, Integer encryption, int plafond, String owner) {
+    public TaskGroup(String hash, Integer encryption, String owner) {
         this.users = new ArrayList<>();
         this.hash = hash;
         this.encryption = encryption;
-        this.plafond = plafond;
         this.owner = owner;
     }
 

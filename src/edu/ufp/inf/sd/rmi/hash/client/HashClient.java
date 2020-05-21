@@ -147,10 +147,7 @@ public class HashClient extends Thread {
                                             encryption = tryParseInt(in.nextLine(), 0);
                                         }
 
-                                        System.out.print("Insert Plafond: ");
-                                        Integer plafond = tryParseInt(in.nextLine(), 10);
-
-                                        TaskGroup taskGroup = new TaskGroup(hash, encryption, plafond, user);
+                                        TaskGroup taskGroup = new TaskGroup(hash, encryption , user);
 
                                         tk = new TaskInput(option, taskGroup);
 

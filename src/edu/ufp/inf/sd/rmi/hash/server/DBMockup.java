@@ -111,4 +111,8 @@ public class DBMockup {
         tg.getUsers().add(u);
         return true;
     }
+
+    public ArrayList<User> getUsers() {
+        return users;
+    }
 }
