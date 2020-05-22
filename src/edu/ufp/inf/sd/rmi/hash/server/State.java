@@ -6,11 +6,31 @@ public class State  implements Serializable {
 
     private String msg;
 
-    private String id;
+    private String worker;
 
-    public State(String msg, String id) {
+    private int idTaskGroup;
+
+    public State(String msg, String worker, int idTaskGroup) {
         this.msg = msg;
-        this.id = id;
+        this.worker = worker;
+        this.idTaskGroup = idTaskGroup;
+    }
+
+    @Override
+    public String toString() {
+        return "State{" +
+                "msg='" + msg + '\'' +
+                ", worker='" + worker + '\'' +
+                ", idTaskGroup=" + idTaskGroup +
+                '}';
+    }
+
+    public int getIdTaskGroup() {
+        return idTaskGroup;
+    }
+
+    public void setIdTaskGroup(int idTaskGroup) {
+        this.idTaskGroup = idTaskGroup;
     }
 
     public String getMsg() {
@@ -21,11 +41,11 @@ public class State  implements Serializable {
         this.msg = msg;
     }
 
-    public String getId() {
-        return id;
+    public String getWorker() {
+        return worker;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setWorker(String worker) {
+        this.worker = worker;
     }
 }

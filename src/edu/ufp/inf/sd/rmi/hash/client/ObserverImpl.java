@@ -1,34 +1,46 @@
 package edu.ufp.inf.sd.rmi.hash.client;
 
 
+import edu.ufp.inf.sd.rmi.hash.server.HashSubjectRI;
 import edu.ufp.inf.sd.rmi.hash.server.State;
-import edu.ufp.inf.sd.rmi.hash.server.HashSessionRI;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class ObserverImpl extends UnicastRemoteObject implements ObserverRI{
-    private String id;
-    private State lastObserverState;
-    protected HashSessionRI hashSessionRI;
-    protected HashClient hashClient;
+public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
 
-    public ObserverImpl(String id, HashClient hashClient, HashSessionRI hashSessionRI) throws RemoteException{
+    private int idTaskGroup;
+
+    private State lastObserverState;
+
+    private String worker;
+
+    private HashSubjectRI hashSubjectRI;
+
+    public ObserverImpl(int idTaskGroup, HashSubjectRI hashSubjectRI, String worker) throws RemoteException{
         super();
-        this.id=id;
-        this.hashClient = hashClient;
-        this.lastObserverState =  new State(id,"");
-        this.hashSessionRI = hashSessionRI;
-        this.hashSessionRI.attach(this);
+        this.idTaskGroup = idTaskGroup;
+        this.worker = worker;
+        this.lastObserverState =  new State("",worker, idTaskGroup);
+        this.hashSubjectRI = hashSubjectRI;
+        this.hashSubjectRI.attach(this);
+    }
+
+    @Override
+    public String toString() {
+        return "ObserverImpl{" +
+                "idTaskGroup=" + idTaskGroup +
+                ", lastObserverState=" + lastObserverState +
+                ", worker='" + worker + '\'' +
+                '}';
     }
 
     @Override
     public void update() throws RemoteException{
-        this.lastObserverState = hashSessionRI.getState();
-        //this.chatFrame.updateTextArea();
+        this.lastObserverState = hashSubjectRI.getState();
     }
 
-    protected State getLastObserverState(){
+    public State getLastObserverState(){
         return this.lastObserverState;
     }
 }

@@ -1,5 +1,7 @@
 package edu.ufp.inf.sd.rmi.hash.server;
 
+import edu.ufp.inf.sd.rmi.hash.client.ObserverImpl;
+
 import java.util.ArrayList;
 
 public class SingletonOperationsTaskGroups implements SingletonOperationsI {
@@ -20,6 +22,7 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
 
     @Override
     public boolean CreateTaskGroup(TaskInput tk, DBMockup db) {
+
         try{
             TaskGroup tg = tk.getTasksGroup();
             ArrayList<TaskGroup> tasks = db.ListTaskGroups();
@@ -33,8 +36,10 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
             tg.setId(id);
             tg.setPause(false);
             tg.setSolved(false);
-            tg.setSubsets(10000);
+            tg.setSubsets(100000);
             tg.setLine(0);
+            tg.setHashSubjectRI(new HashSubjectImpl(id));
+            tg.setObserver(new ObserverImpl(id, tg.getHashSubjectRI(), tk.getTasksGroup().getOwner()));
 
             for(User u : db.getUsers())
             {
@@ -75,6 +80,15 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
         try{
             TaskGroup tg = db.ListTaskGroups().get(tk.getId());
 
+            if(tg.isPause())
+            {
+
+                State s = new State("UnPause", tg.getOwner(), tg.getId());
+                tg.getHashSubjectRI().setState(s);
+            }else{
+                State s = new State("Pause", tg.getOwner(), tg.getId());
+                tg.getHashSubjectRI().setState(s);
+            }
             return db.PauseTaskGroup(tg);
         }catch (Exception e){
             System.out.println("[SingletonOperationsTaskGroups] - (Un)Pause: " + e);

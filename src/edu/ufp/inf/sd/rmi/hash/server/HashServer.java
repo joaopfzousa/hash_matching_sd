@@ -11,6 +11,8 @@ public class HashServer {
 
     private SetupContextRMI contextRMI;
 
+    private HashSubjectRI myRI;
+
     public static void main(String[] args) {
         if (args != null && args.length < 3) {
             System.exit(-1);

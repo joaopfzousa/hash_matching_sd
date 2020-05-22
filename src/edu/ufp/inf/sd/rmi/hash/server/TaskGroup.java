@@ -1,5 +1,7 @@
 package edu.ufp.inf.sd.rmi.hash.server;
 
+import edu.ufp.inf.sd.rmi.hash.client.ObserverRI;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -27,6 +29,11 @@ public class TaskGroup implements Serializable {
 
     private boolean solved;
 
+    private HashSubjectRI hashSubjectRI;
+
+    private ObserverRI observer;
+
+
     public TaskGroup(String hash, Integer encryption, String owner) {
         this.users = new ArrayList<>();
         this.hash = hash;
@@ -34,17 +41,20 @@ public class TaskGroup implements Serializable {
         this.owner = owner;
     }
 
-    public TaskGroup(int id, ArrayList<String> users, String hash, Integer encryption, int strategy, int plafond, String owner, boolean pause, int subsets, boolean solved) {
-        this.id = id;
-        this.users = users;
-        this.hash = hash;
-        this.encryption = encryption;
-        this.strategy = strategy;
-        this.plafond = plafond;
-        this.owner = owner;
-        this.pause = pause;
-        this.subsets = subsets;
-        this.solved = solved;
+    public HashSubjectRI getHashSubjectRI() {
+        return hashSubjectRI;
+    }
+
+    public void setHashSubjectRI(HashSubjectRI hashSubjectRI) {
+        this.hashSubjectRI = hashSubjectRI;
+    }
+
+    public ObserverRI getObserver() {
+        return observer;
+    }
+
+    public void setObserver(ObserverRI observer) {
+        this.observer = observer;
     }
 
     public int getId() {

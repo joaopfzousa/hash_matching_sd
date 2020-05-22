@@ -22,7 +22,6 @@ public class HashClient extends Thread {
 
     private SetupContextRMI contextRMI;
     private HashLoginRI hashLoginRI;
-    private ObserverImpl observer;
 
     public HashClient(String[] args) {
         try {
@@ -154,7 +153,8 @@ public class HashClient extends Thread {
                                         boolean create = (boolean) session.acceptVisitor(v1, tk);
 
                                         System.out.println();
-                                        if (create == true) {
+                                        if (create)
+                                        {
                                             System.out.println("Created TaskGroup sucessfully!");
                                         } else {
                                             System.out.println("TakGroup not created!");
@@ -173,6 +173,7 @@ public class HashClient extends Thread {
 
                                         boolean idexisttask = false;
                                         for (TaskGroup tg : join_tasks_pause) {
+
                                             if (tg.getId() == idtask) {
                                                 idexisttask = true;
                                                 break;
@@ -189,6 +190,13 @@ public class HashClient extends Thread {
 
                                         boolean pause = (boolean) session.acceptVisitor(v1, tk);
 
+                                        System.out.println();
+                                        if (pause)
+                                        {
+                                            System.out.println("Pause TaskGroup sucessfully!");
+                                        } else {
+                                            System.out.println("UnPause TaskGroup sucessfully!!");
+                                        }
                                         break;
                                     case 4:
                                         break;
@@ -259,95 +267,5 @@ public class HashClient extends Thread {
         } catch (NumberFormatException e) {
             return defaultVal;
         }
-    }
-
-    public static boolean StartWorking(WorkerInput wi, long id) {
-        System.out.println("thread nº = " + id);
-        try {
-            File f = new File(wi.getFile());
-            String f1 = f.getAbsolutePath();
-            if (!f.isFile() || !f.canRead())
-                throw new IOException("can't read " + wi.getFile());
-
-            BufferedReader br = new BufferedReader(new FileReader(f));
-            try (LineNumberReader lnr = new LineNumberReader(br)) {
-                String line;
-                while (lnr.readLine() != null && lnr.getLineNumber() < wi.getLine()) {
-                }
-
-                String securePassword = "";
-                switch (wi.getEncryption()) {
-                    case (1):
-                        while ((line = lnr.readLine()) != null && lnr.getLineNumber() < wi.getLine() + wi.getSubset()) {
-                            securePassword = get_SHA_512_SecurePassword(line);
-
-                            if(lnr.getLineNumber() == 100 || lnr.getLineNumber() == 10010)
-                            {
-                                System.out.println(" hash = " + securePassword);
-                            }
-
-                            if (securePassword.compareTo(wi.getHash()) == 0) {
-                                System.out.println("Encontrei a hash na linha " + lnr.getLineNumber() + "!");
-                                //observer (descobri a password)
-                                //user recebe 10 créditos
-                                //para worker
-                            } else {
-                                //recebe 1 credito
-                            }
-                            //System.out.println(securePassword);
-                        }
-                        break;
-                    case (2):
-                        while ((line = lnr.readLine()) != null && lnr.getLineNumber() < wi.getLine() + wi.getSubset()) {
-                            securePassword = generateStrongPasswordHash(line);
-
-                            if (securePassword.compareTo(wi.getHash()) == 0) {
-                                System.out.println("Encontrei a hash na linha " + lnr.getLineNumber() + "!");
-                                //observer (descobri a password)
-                                //user recebe 10 créditos
-                                //para worker
-                            } else {
-                                //recebe 1 credito
-                            }
-                            //System.out.println(securePassword);
-                        }
-
-                        break;
-                    case (3):
-                        while ((line = lnr.readLine()) != null && lnr.getLineNumber() < wi.getLine() + wi.getSubset()) {
-                            securePassword = BCrypt.hashpw(line, BCrypt.gensalt(12));
-
-                            if (securePassword.compareTo(wi.getHash()) == 0) {
-                                System.out.println("Encontrei a hash na linha " + lnr.getLineNumber() + "!");
-                                //observer (descobri a password)
-                                //user recebe 10 créditos
-                                //para worker
-                            } else {
-                                //recebe 1 credito
-                            }
-                            //System.out.println(securePassword);
-                        }
-                        break;
-                    case (4):
-                        while ((line = lnr.readLine()) != null && lnr.getLineNumber() < wi.getLine() + wi.getSubset()) {
-                            securePassword =  SCryptUtil.scrypt(line, 16, 16, 16);
-                            if (securePassword.compareTo(wi.getHash()) == 0) {
-                                System.out.println("Encontrei a hash na linha " + lnr.getLineNumber() + "!");
-                                //observer (descobri a password)
-                                //user recebe 10 créditos
-                                //para worker
-                            } else {
-                                //recebe 1 credito
-                            }
-                            //System.out.println(securePassword);
-                        }
-
-                        break;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 }
