@@ -100,6 +100,7 @@ public class DBMockup {
             if(tk.getId() == tg.getId())
             {
                 tk.setPause(!tk.isPause());
+                System.out.println(tk.isPause());
                 return tk.isPause();
             }
         }

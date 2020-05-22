@@ -19,9 +19,7 @@ public class HashSubjectImpl extends UnicastRemoteObject implements HashSubjectR
 
     @Override
     public void attach(ObserverRI obsRI) {
-        System.out.println(obsRI);
         if(!this.observers.contains(obsRI)){
-            System.out.println("entrei");
             this.observers.add(obsRI);
         }
     }
@@ -46,6 +44,7 @@ public class HashSubjectImpl extends UnicastRemoteObject implements HashSubjectR
 
     @Override
     public void setState(State state) {
+        System.out.println("STATE = " + state);
         this.subjectState = state;
         this.notifyAllObservers(state);
     }

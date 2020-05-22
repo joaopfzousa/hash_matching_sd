@@ -184,6 +184,14 @@ public class HashClient extends Thread {
                                             System.out.println("This id not exists");
                                             System.out.print("Insert id: ");
                                             idtask = tryParseInt(in.nextLine(), 0);
+
+                                            for (TaskGroup tg : join_tasks_pause) {
+
+                                                if (tg.getId() == idtask) {
+                                                    idexisttask = true;
+                                                    break;
+                                                }
+                                            }
                                         }
 
                                         tk = new TaskInput(idtask, option);
@@ -226,6 +234,13 @@ public class HashClient extends Thread {
                                             System.out.println("This id not exists");
                                             System.out.print("Insert id: ");
                                             id = tryParseInt(in.nextLine(), 0);
+
+                                            for (TaskGroup tg : join_tasks) {
+                                                if (tg.getId() == id) {
+                                                    idexist = true;
+                                                    break;
+                                                }
+                                            }
                                         }
 
                                         for(int i = 0; i < nWorkers; i++)
