@@ -16,13 +16,24 @@ public class WorkerInput implements Serializable {
 
     private String file;
 
-    public WorkerInput(int line, int subset, String hash, Integer encryption, int strategy, String file) {
+    private HashSubjectRI hashSubjectRI;
+
+    public WorkerInput(int line, int subset, String hash, Integer encryption, int strategy, String file, HashSubjectRI hashSubjectRI) {
         this.line = line;
         this.subset = subset;
         this.hash = hash;
         this.encryption = encryption;
         this.strategy = strategy;
         this.file = file;
+        this.hashSubjectRI = hashSubjectRI;
+    }
+
+    public HashSubjectRI getHashSubjectRI() {
+        return hashSubjectRI;
+    }
+
+    public void setHashSubjectRI(HashSubjectRI hashSubjectRI) {
+        this.hashSubjectRI = hashSubjectRI;
     }
 
     public int getLine() {

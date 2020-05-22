@@ -212,7 +212,7 @@ public class HashClient extends Thread {
                                         }
 
                                         System.out.print("Insert id: ");
-                                        Integer id = tryParseInt(in.nextLine(), 0);
+                                        int id = tryParseInt(in.nextLine(), 0);
 
                                         boolean idexist = false;
                                         for (TaskGroup tg : join_tasks) {

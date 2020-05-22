@@ -15,7 +15,7 @@ public class Worker extends Thread implements Serializable {
 
     private String username;
 
-    private Integer idTaskInput;
+    private int idTaskGroup;
 
     private Integer option;
 
@@ -27,14 +27,12 @@ public class Worker extends Thread implements Serializable {
 
     private ObserverImpl observer;
 
-    public Worker(String username, Integer idTaskInput, Integer option, HashSessionRI session, VisitorHashOperationsI v1) throws RemoteException {
+    public Worker(String username, int idTaskGroup, Integer option, HashSessionRI session, VisitorHashOperationsI v1) throws RemoteException {
         this.username = username;
-        this.idTaskInput = idTaskInput;
+        this.idTaskGroup = idTaskGroup;
         this.option = option;
         this.session = session;
         this.v1 = v1;
-        hashSubjectRI = new HashSubjectImpl(idTaskInput);
-
     }
 
     public String getUsername() {
@@ -47,10 +45,11 @@ public class Worker extends Thread implements Serializable {
 
     public void run(){
         System.out.println("thread is running...");
-        TaskInput tk = new TaskInput(this.idTaskInput, this.option, this.username);
+        TaskInput tk = new TaskInput(this.idTaskGroup, this.option, this.username);
 
         try {
             WorkerInput wi = (WorkerInput) this.session.acceptVisitor(this.v1, tk);
+            this.hashSubjectRI = wi.getHashSubjectRI();
             this.StartWorking(wi, this.getName());
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -61,7 +60,8 @@ public class Worker extends Thread implements Serializable {
     public boolean StartWorking(WorkerInput wi, String idThread) throws RemoteException {
         System.out.println("thread nº = " + idThread);
 
-        observer = new ObserverImpl(this.idTaskInput, this.hashSubjectRI, idThread);
+        this.observer = new ObserverImpl(this.idTaskGroup, this.hashSubjectRI, idThread);
+
         try {
             File f = new File(wi.getFile());
             String f1 = f.getAbsolutePath();
@@ -77,23 +77,17 @@ public class Worker extends Thread implements Serializable {
                 String securePassword = "";
                 switch (wi.getEncryption()) {
                     case (1):
-                        while ((line = lnr.readLine()) != null && lnr.getLineNumber() < wi.getLine() + wi.getSubset()) {
-
-                            //System.out.println(observer);
-                            //String msg="[" + observer.getLastObserverState().getWorker() + "] " + observer.getLastObserverState().getMsg();
-                            System.out.println("MSG = " + observer.getLastObserverState().getMsg());
+                        while ((line = lnr.readLine()) != null && lnr.getLineNumber() < wi.getLine() + wi.getSubset())
+                        {
+                            securePassword = get_SHA_512_SecurePassword(line);
+                            //System.out.println("MSG = " + observer.getLastObserverState().getMsg() + " linha = " + lnr.getLineNumber());
                             if(observer.getLastObserverState().getMsg().compareTo("Pause") == 0)
                             {
-                                System.out.println("Parei lindo, conseguiste na linha = " + lnr.getLineNumber());
+                                System.out.println("O" + observer.getLastObserverState().getWorker() + " mandou a Mensagem  = " + observer.getLastObserverState().getMsg() + ", parei na linha = " + lnr.getLineNumber());
                                 break;
                             }
-                            securePassword = get_SHA_512_SecurePassword(line);
-                            //System.out.println(securePassword);
 
-                            if(lnr.getLineNumber() == 100 || lnr.getLineNumber() == 10010)
-                            {
-                                System.out.println(" hash = " + securePassword);
-                            }
+
 
                             if (securePassword.compareTo(wi.getHash()) == 0) {
                                 System.out.println("Encontrei a hash na linha " + lnr.getLineNumber() + "!");

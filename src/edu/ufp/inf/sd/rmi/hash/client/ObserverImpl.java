@@ -36,6 +36,15 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
     }
 
     @Override
+    public int getIdTaskGroup() {
+        return idTaskGroup;
+    }
+
+    public void setIdTaskGroup(int idTaskGroup) {
+        this.idTaskGroup = idTaskGroup;
+    }
+
+    @Override
     public void update() throws RemoteException{
         this.lastObserverState = hashSubjectRI.getState();
     }
