@@ -96,9 +96,9 @@ public class Worker extends Thread implements Serializable {
                                     msg = observer.getLastObserverState().getMsg();
                                     count ++;
                                     Thread.sleep(2000);
-                                    if(count == 100){
+                                    if(count == 100)
                                         System.out.println("A mensagem enviada pelo " + observer.getLastObserverState().getWorker() + " ainda é -> " + observer.getLastObserverState().getMsg());
-                                    }
+
                                     //System.out.println("msg = " + msg);
                                 }
 

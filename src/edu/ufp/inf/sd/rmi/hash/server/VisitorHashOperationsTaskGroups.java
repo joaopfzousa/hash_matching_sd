@@ -16,7 +16,7 @@ public class VisitorHashOperationsTaskGroups implements VisitorHashOperationsI, 
             case 3:
                 return sTaskGroup.PauseTaskGroup(tk, db);
             case 4:
-                // delete
+                return sTaskGroup.DeleteTaskGroup(tk, db);
             case 5:
                 return sTaskGroup.JoinTaskGroup(tk, db);
         }
