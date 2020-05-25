@@ -207,6 +207,48 @@ public class HashClient extends Thread {
                                         }
                                         break;
                                     case 4:
+                                        tk.setOption(1);
+                                        ArrayList<TaskGroup> join_tasks_delete = (ArrayList<TaskGroup>) session.acceptVisitor(v1, tk);
+
+                                        for (TaskGroup tg : join_tasks_delete) {
+                                            System.out.println("Id da TaskGroup = " + tg.getId());
+                                        }
+
+                                        System.out.print("Insert id: ");
+                                        Integer idtask_delete = tryParseInt(in.nextLine(), 0);
+
+                                        boolean idexisttask_delete = false;
+                                        for (TaskGroup tg : join_tasks_delete) {
+
+                                            if (tg.getId() == idtask_delete) {
+                                                idexisttask_delete = true;
+                                                break;
+                                            }
+                                        }
+
+                                        while (idexisttask_delete == false) {
+                                            System.out.println("This id not exists");
+                                            System.out.print("Insert id: ");
+                                            idtask_delete = tryParseInt(in.nextLine(), 0);
+
+                                            for (TaskGroup tg : join_tasks_delete) {
+
+                                                if (tg.getId() == idtask_delete) {
+                                                    idexisttask_delete = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+                                        tk = new TaskInput(idtask_delete, option);
+
+                                        boolean delete = (boolean) session.acceptVisitor(v1, tk);
+
+                                        System.out.println();
+                                        if (delete)
+                                        {
+                                            System.out.println("Deleted TaskGroup sucessfully!");
+                                        }
                                         break;
                                     case 5:
                                         System.out.print("Quantos workers quer inserir: ");

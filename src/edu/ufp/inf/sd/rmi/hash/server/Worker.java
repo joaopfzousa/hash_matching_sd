@@ -1,14 +1,11 @@
 package edu.ufp.inf.sd.rmi.hash.server;
 
-import edu.ufp.inf.sd.rmi.hash.client.HashClient;
 import edu.ufp.inf.sd.rmi.hash.client.ObserverImpl;
 import edu.ufp.inf.sd.rmi.hash.helpers.bcrypt.BCrypt;
 import edu.ufp.inf.sd.rmi.util.lambdaworks.crypto.SCryptUtil;
 
 import java.io.*;
 import java.rmi.RemoteException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static edu.ufp.inf.sd.rmi.hash.helpers.advanced.ReallyStrongSecuredPassword.generateStrongPasswordHash;
 import static edu.ufp.inf.sd.rmi.hash.helpers.sha.SHAExample.get_SHA_512_SecurePassword;
@@ -81,21 +78,39 @@ public class Worker extends Thread implements Serializable {
                         while ((line = lnr.readLine()) != null && lnr.getLineNumber() < wi.getLine() + wi.getSubset())
                         {
                             securePassword = get_SHA_512_SecurePassword(line);
-                            //System.out.println("MSG = " + observer.getLastObserverState().getMsg() + " linha = " + lnr.getLineNumber());
+
+                            if(observer.getLastObserverState().getMsg().compareTo("Delete") == 0)
+                            {
+                                System.out.println("[" + idThread + "] -> A taskGroup com o id " + observer.getLastObserverState().getIdTaskGroup() +", foi o " + observer.getLastObserverState().getWorker() + " que  mandou a Mensagem -> " + observer.getLastObserverState().getMsg() + ", parei na linha = " + lnr.getLineNumber());
+                                break;
+                            }
+
                             if(observer.getLastObserverState().getMsg().compareTo("Pause") == 0)
                             {
-                                Logger.getLogger(this.getClass().getName()).log(Level.INFO, idThread + " -> A taskGroup com o id " + observer.getLastObserverState().getIdTaskGroup() +", foi o " + observer.getLastObserverState().getWorker() + " que  mandou a Mensagem -> " + observer.getLastObserverState().getMsg() + ", parei na linha = " + lnr.getLineNumber());
+                                System.out.println("[" +idThread + "] -> A taskGroup com o id " + observer.getLastObserverState().getIdTaskGroup() +", foi o " + observer.getLastObserverState().getWorker() + " que  mandou a Mensagem -> " + observer.getLastObserverState().getMsg() + ", parei na linha = " + lnr.getLineNumber());
 
                                 String msg = observer.getLastObserverState().getMsg();
+                                int count = 0;
                                 while(msg.compareTo("Pause") == 0)
                                 {
                                     msg = observer.getLastObserverState().getMsg();
+                                    count ++;
+                                    Thread.sleep(2000);
+                                    if(count == 100){
+                                        System.out.println("A mensagem enviada pelo " + observer.getLastObserverState().getWorker() + " ainda é -> " + observer.getLastObserverState().getMsg());
+                                    }
                                     //System.out.println("msg = " + msg);
+                                }
+
+                                if(observer.getLastObserverState().getMsg().compareTo("Delete") == 0)
+                                {
+                                    System.out.println("[" + idThread + "] -> A taskGroup com o id " + observer.getLastObserverState().getIdTaskGroup() +", foi o " + observer.getLastObserverState().getWorker() + " que  mandou a Mensagem -> " + observer.getLastObserverState().getMsg() + ", parei na linha = " + lnr.getLineNumber());
+                                    break;
                                 }
 
                                 if(observer.getLastObserverState().getMsg().compareTo("UnPause") == 0)
                                 {
-                                    Logger.getLogger(this.getClass().getName()).log(Level.INFO, idThread + " -> A taskGroup com o id " + observer.getLastObserverState().getIdTaskGroup() + ", foi o " + observer.getLastObserverState().getWorker() + " que  mandou a Mensagem -> " + observer.getLastObserverState().getMsg() + ", vou continuar na linha = " + lnr.getLineNumber());
+                                    System.out.println("[" + idThread + "] -> A taskGroup com o id " + observer.getLastObserverState().getIdTaskGroup() + ", foi o " + observer.getLastObserverState().getWorker() + " que  mandou a Mensagem -> " + observer.getLastObserverState().getMsg() + ", vou continuar na linha = " + lnr.getLineNumber());
                                 }
                             }
 

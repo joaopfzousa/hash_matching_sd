@@ -7,4 +7,5 @@ public interface SingletonOperationsI {
     public boolean CreateTaskGroup(TaskInput tk, DBMockup db);
     public WorkerInput JoinTaskGroup(TaskInput tk, DBMockup db);
     public boolean PauseTaskGroup(TaskInput tk, DBMockup db);
+    public boolean DeleteTaskGroup(TaskInput tk, DBMockup db);
 }

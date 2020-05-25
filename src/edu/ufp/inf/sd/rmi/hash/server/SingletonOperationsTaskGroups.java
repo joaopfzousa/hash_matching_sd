@@ -97,4 +97,24 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
         }
         return false;
     }
+
+    @Override
+    public boolean DeleteTaskGroup(TaskInput tk, DBMockup db) {
+        try{
+            TaskGroup tg = db.ListTaskGroups().get(tk.getId());
+
+            boolean delete = db.DeleteTaskGroup(tg);
+
+            if(delete)
+            {
+                State s = new State("Delete", tg.getOwner(), tg.getId());
+                tg.getHashSubjectRI().setState(s);
+            }
+
+            return delete;
+        }catch (Exception e){
+            System.out.println("[SingletonOperationsTaskGroups] - (Un)Pause: " + e);
+        }
+        return false;
+    }
 }

@@ -80,19 +80,6 @@ public class DBMockup {
         return false;
     }
 
-    public boolean UpdateTaskGroup(TaskGroup tg)
-    {
-        for(TaskGroup tk : taskGroups)
-        {
-            if(tk.getId() == tg.getId())
-            {
-                //tudo
-                return true;
-            }
-        }
-        return false;
-    }
-
     public boolean PauseTaskGroup(TaskGroup tg)
     {
         for(TaskGroup tk : taskGroups)
