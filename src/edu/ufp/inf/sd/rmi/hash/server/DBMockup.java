@@ -11,10 +11,13 @@ public class DBMockup {
 
     private ArrayList<TaskGroup> taskGroups;// = new ArrayList<>();
 
+    private int lines;
+
+
     /**
      * This constructor creates and inits the database with some users.
      */
-    public DBMockup() {
+    public DBMockup(int lines) {
 
         users = new ArrayList<>();
 
@@ -25,6 +28,7 @@ public class DBMockup {
         users.add(new User("manel", "ufp",300));
 
         taskGroups = new ArrayList<>();
+        this.lines = lines;
     }
 
     /**
@@ -103,4 +107,9 @@ public class DBMockup {
     public ArrayList<User> getUsers() {
         return users;
     }
+
+    public int getLines() {
+        return lines;
+    }
+
 }

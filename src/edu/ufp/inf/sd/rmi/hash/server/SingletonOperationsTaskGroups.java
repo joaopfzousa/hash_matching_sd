@@ -36,7 +36,12 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
             tg.setId(id);
             tg.setPause(false);
             tg.setSolved(false);
-            tg.setSubsets(200000);
+
+            int lines = db.getLines();
+            float subsets =  (float) lines/10;
+            double new_subets = Math.ceil(subsets);
+
+            tg.setSubsets((int) new_subets);
             tg.setLine(0);
             tg.setHashSubjectRI(new HashSubjectImpl(id));
             tg.setObserver(new ObserverImpl(id, tg.getHashSubjectRI(), tk.getTasksGroup().getOwner()));
@@ -61,7 +66,7 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
 
             boolean join = db.JoinWorkerinTaskGroup(tg, tk.getUsername());
 
-            if(join)
+            if(join && tg.getLine() < db.getLines())
             {
                 WorkerInput wi = new WorkerInput(tg.getLine(), tg.getSubsets(), tg.getHash(), tg.getEncryption(), tg.getStrategy(), "/Users/joaopfzousa/IdeaProjects/SD_Project/files/passwords.txt", tg.getHashSubjectRI());
 

@@ -42,14 +42,28 @@ public class Worker extends Thread implements Serializable {
         this.username = username;
     }
 
-    public void run(){
-        System.out.println("thread is running...");
+    public void run()
+    {
         TaskInput tk = new TaskInput(this.idTaskGroup, this.option, this.username);
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         try {
             WorkerInput wi = (WorkerInput) this.session.acceptVisitor(this.v1, tk);
-            this.hashSubjectRI = wi.getHashSubjectRI();
-            this.StartWorking(wi, this.getName());
+            System.out.println(wi);
+
+            if(wi != null)
+            {
+                System.out.println("thread is running...");
+                this.hashSubjectRI = wi.getHashSubjectRI();
+                this.StartWorking(wi, this.getName());
+
+            }else{
+                System.out.println("Não tenho linhas para ler!!!");
+            }
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -78,6 +92,7 @@ public class Worker extends Thread implements Serializable {
                         while ((line = lnr.readLine()) != null && lnr.getLineNumber() < wi.getLine() + wi.getSubset())
                         {
                             securePassword = get_SHA_512_SecurePassword(line);
+                            Thread.sleep(1000);
 
                             if(observer.getLastObserverState().getMsg().compareTo("Delete") == 0)
                             {
