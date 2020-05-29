@@ -122,7 +122,6 @@ public class HashClient extends Thread {
                                 System.out.print("Option: ");
                                 String op = in.nextLine();
                                 option = tryParseInt(op, 0);
-                                TaskInput tk = new TaskInput(option);
                                 switch (option) {
                                     case 1:
                                         v = new VisitorListTaskGroup();
