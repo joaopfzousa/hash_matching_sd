@@ -1,7 +1,5 @@
 package edu.ufp.inf.sd.rmi.hash.server;
 
-import edu.ufp.inf.sd.rmi.hash.client.ObserverRI;
-
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
