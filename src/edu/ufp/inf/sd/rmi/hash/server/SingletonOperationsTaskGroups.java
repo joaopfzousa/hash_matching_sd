@@ -21,10 +21,10 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
     }
 
     @Override
-    public boolean CreateTaskGroup(TaskInput tk, DBMockup db) {
+    public boolean CreateTaskGroup(TaskGroup taskgroup, DBMockup db) {
 
         try{
-            TaskGroup tg = tk.getTasksGroup();
+            TaskGroup tg = taskgroup;
             ArrayList<TaskGroup> tasks = db.ListTaskGroups();
 
             int id;
@@ -44,11 +44,11 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
             tg.setSubsets((int) new_subets);
             tg.setLine(0);
             tg.setHashSubjectRI(new HashSubjectImpl(id));
-            tg.setObserver(new ObserverImpl(id, tg.getHashSubjectRI(), tk.getTasksGroup().getOwner()));
+            tg.setObserver(new ObserverImpl(id, tg.getHashSubjectRI(), taskgroup.getOwner()));
 
             for(User u : db.getUsers())
             {
-                if (u.getUname().compareTo(tk.getTasksGroup().getOwner())==0)
+                if (u.getUname().compareTo(taskgroup.getOwner())==0)
                     tg.setPlafond(u.getCredits());
             }
 
@@ -60,11 +60,11 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
     }
 
     @Override
-    public WorkerInput JoinTaskGroup(TaskInput tk, DBMockup db) {
+    public WorkerInput JoinTaskGroup(String user, int id, DBMockup db) {
         try{
-            TaskGroup tg = db.ListTaskGroups().get(tk.getId());
+            TaskGroup tg = db.ListTaskGroups().get(id);
 
-            boolean join = db.JoinWorkerinTaskGroup(tg, tk.getUsername());
+            boolean join = db.JoinWorkerinTaskGroup(tg, user);
 
             if(join && tg.getLine() < db.getLines())
             {
@@ -81,9 +81,9 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
     }
 
     @Override
-    public boolean PauseTaskGroup(TaskInput tk, DBMockup db) {
+    public boolean PauseTaskGroup(Integer idtask, DBMockup db) {
         try{
-            TaskGroup tg = db.ListTaskGroups().get(tk.getId());
+            TaskGroup tg = db.ListTaskGroups().get(idtask);
 
             boolean isPause = db.PauseTaskGroup(tg);
 
@@ -104,9 +104,9 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
     }
 
     @Override
-    public boolean DeleteTaskGroup(TaskInput tk, DBMockup db) {
+    public boolean DeleteTaskGroup(Integer idtask, DBMockup db) {
         try{
-            TaskGroup tg = db.ListTaskGroups().get(tk.getId());
+            TaskGroup tg = db.ListTaskGroups().get(idtask);
 
             boolean delete = db.DeleteTaskGroup(tg);
 

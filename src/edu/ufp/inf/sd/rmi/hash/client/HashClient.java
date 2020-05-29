@@ -107,7 +107,7 @@ public class HashClient extends Thread {
                         HashSessionRI session = login(user, password);
                         if (session != null) {
                             System.out.println("\n\t\tWelcome " + user);
-                            VisitorHashOperationsI v1 = new VisitorHashOperationsTaskGroups();
+                            VisitorHashOperationsI v = null;
                             do {
                                 System.out.println("-------------------------------------------");
                                 System.out.println("------------------- Menu ------------------");
@@ -125,7 +125,8 @@ public class HashClient extends Thread {
                                 TaskInput tk = new TaskInput(option);
                                 switch (option) {
                                     case 1:
-                                        ArrayList<TaskGroup> tasks = (ArrayList<TaskGroup>) session.acceptVisitor(v1, tk);
+                                        v = new VisitorListTaskGroup();
+                                        ArrayList<TaskGroup> tasks = (ArrayList<TaskGroup>) session.acceptVisitor(v);
 
                                         for (TaskGroup tg : tasks) {
                                             System.out.println(tg);
@@ -152,9 +153,9 @@ public class HashClient extends Thread {
 
                                         TaskGroup taskGroup = new TaskGroup(hash, encryption , user);
 
-                                        tk = new TaskInput(option, taskGroup);
+                                        v = new VisitorCreateTaskGroup(taskGroup);
 
-                                        boolean create = (boolean) session.acceptVisitor(v1, tk);
+                                        boolean create = (boolean) session.acceptVisitor(v);
 
                                         System.out.println();
                                         if (create)
@@ -165,8 +166,8 @@ public class HashClient extends Thread {
                                         }
                                         break;
                                     case 3:
-                                        tk.setOption(1);
-                                        ArrayList<TaskGroup> join_tasks_pause = (ArrayList<TaskGroup>) session.acceptVisitor(v1, tk);
+                                        v = new VisitorListTaskGroup();
+                                        ArrayList<TaskGroup> join_tasks_pause = (ArrayList<TaskGroup>) session.acceptVisitor(v);
 
                                         for (TaskGroup tg : join_tasks_pause) {
                                             System.out.println("Id da TaskGroup = " + tg.getId());
@@ -184,7 +185,7 @@ public class HashClient extends Thread {
                                             }
                                         }
 
-                                        while (idexisttask == false) {
+                                        while (!idexisttask) {
                                             System.out.println("This id not exists");
                                             System.out.print("Insert id: ");
                                             idtask = tryParseInt(in.nextLine(), 0);
@@ -198,9 +199,8 @@ public class HashClient extends Thread {
                                             }
                                         }
 
-                                        tk = new TaskInput(idtask, option);
-
-                                        boolean pause = (boolean) session.acceptVisitor(v1, tk);
+                                        v = new VisitorPauseTaskGroup(idtask);
+                                        boolean pause = (boolean) session.acceptVisitor(v);
 
                                         System.out.println();
                                         if (pause)
@@ -211,8 +211,8 @@ public class HashClient extends Thread {
                                         }
                                         break;
                                     case 4:
-                                        tk.setOption(1);
-                                        ArrayList<TaskGroup> join_tasks_delete = (ArrayList<TaskGroup>) session.acceptVisitor(v1, tk);
+                                        v = new VisitorListTaskGroup();
+                                        ArrayList<TaskGroup> join_tasks_delete = (ArrayList<TaskGroup>) session.acceptVisitor(v);
 
                                         for (TaskGroup tg : join_tasks_delete) {
                                             System.out.println("Id da TaskGroup = " + tg.getId());
@@ -230,7 +230,7 @@ public class HashClient extends Thread {
                                             }
                                         }
 
-                                        while (idexisttask_delete == false) {
+                                        while (!idexisttask_delete) {
                                             System.out.println("This id not exists");
                                             System.out.print("Insert id: ");
                                             idtask_delete = tryParseInt(in.nextLine(), 0);
@@ -244,9 +244,8 @@ public class HashClient extends Thread {
                                             }
                                         }
 
-                                        tk = new TaskInput(idtask_delete, option);
-
-                                        boolean delete = (boolean) session.acceptVisitor(v1, tk);
+                                        v = new VisitorDeleteTaskGroup(idtask_delete);
+                                        boolean delete = (boolean) session.acceptVisitor(v);
 
                                         System.out.println();
                                         if (delete)
@@ -255,8 +254,8 @@ public class HashClient extends Thread {
                                         }
                                         break;
                                     case 5:
-                                        tk.setOption(1);
-                                        ArrayList<TaskGroup> join_tasks = (ArrayList<TaskGroup>) session.acceptVisitor(v1, tk);
+                                        v = new VisitorListTaskGroup();
+                                        ArrayList<TaskGroup> join_tasks = (ArrayList<TaskGroup>) session.acceptVisitor(v);
 
                                         for (TaskGroup tg : join_tasks) {
                                             System.out.println("Id da TaskGroup = " + tg.getId());
@@ -273,7 +272,7 @@ public class HashClient extends Thread {
                                             }
                                         }
 
-                                        while (idexist == false) {
+                                        while (!idexist) {
                                             System.out.println("This id not exists");
                                             System.out.print("Insert id: ");
                                             id = tryParseInt(in.nextLine(), 0);
@@ -286,10 +285,10 @@ public class HashClient extends Thread {
                                             }
                                         }
 
-                                        tk = new TaskInput(id, option, user);
+                                        v = new VisitorJoinTaskGroup(user, id);
 
                                         try {
-                                            WorkerInput wi = (WorkerInput) session.acceptVisitor(v1, tk);
+                                            WorkerInput wi = (WorkerInput) session.acceptVisitor(v);
                                             System.out.println(wi);
 
                                             if(wi != null)
