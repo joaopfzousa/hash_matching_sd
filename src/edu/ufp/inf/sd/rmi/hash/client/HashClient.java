@@ -28,6 +28,8 @@ public class HashClient extends Thread {
 
     private ThreadPool tPool = new ThreadPool(5);
 
+    HashSessionRI session = null;
+
     public HashClient(String[] args) {
         try {
             String registryIP = args[0];
@@ -105,7 +107,7 @@ public class HashClient extends Thread {
                         String user = in.nextLine();
                         System.out.print("Please insert your password: ");
                         String password = in.nextLine();
-                        HashSessionRI session = login(user, password);
+                         session = login(user, password);
                         if (session != null) {
                             System.out.println("\n\t\tWelcome " + user);
                             VisitorHashOperationsI v = null;
@@ -354,7 +356,7 @@ public class HashClient extends Thread {
                 }
 
                 while ((line = lnr.readLine()) != null && lnr.getLineNumber() < wi.getLine() + wi.getSubset()) {
-                    System.out.println("this.observer.getLastObserverState().getMsg() = " + this.observer.getLastObserverState().getMsg());
+                    //System.out.println("this.observer.getLastObserverState().getMsg() = " + this.observer.getLastObserverState().getMsg());
 
                     if (this.observer.getLastObserverState().getMsg().compareTo("Delete") == 0) {
                         System.out.println("[CLIENT] -> A taskGroup com o id " + this.observer.getLastObserverState().getIdTaskGroup() + ", foi o " + this.observer.getLastObserverState().getWorker() + " que  mandou a Mensagem -> " + this.observer.getLastObserverState().getMsg() + ", parei na linha = " + lnr.getLineNumber());
@@ -384,7 +386,7 @@ public class HashClient extends Thread {
                         }
                     }
 
-                    Runnable r = new Task(line, wi.getEncryption(), wi.getHash(), this.observer, lnr.getLineNumber());
+                    Runnable r = new Task(wi.getIdTask(),wi.getUser(),line, wi.getEncryption(), wi.getHash(), this.observer, lnr.getLineNumber(),session);
 
                     tPool.execute(r);
                 }

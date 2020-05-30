@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class WorkerInput implements Serializable {
 
+    private int idTask;
+
     private int line;
 
     private int subset;
@@ -18,7 +20,10 @@ public class WorkerInput implements Serializable {
 
     private HashSubjectRI hashSubjectRI;
 
-    public WorkerInput(int line, int subset, String hash, Integer encryption, int strategy, String file, HashSubjectRI hashSubjectRI) {
+    private String user;
+
+    public WorkerInput(int idTask,int line, int subset, String hash, Integer encryption, int strategy, String file, HashSubjectRI hashSubjectRI,String user) {
+        this.idTask = idTask;
         this.line = line;
         this.subset = subset;
         this.hash = hash;
@@ -26,6 +31,15 @@ public class WorkerInput implements Serializable {
         this.strategy = strategy;
         this.file = file;
         this.hashSubjectRI = hashSubjectRI;
+        this.user = user;
+    }
+
+    public int getIdTask() {
+        return idTask;
+    }
+
+    public void setIdTask(int idTask) {
+        this.idTask = idTask;
     }
 
     public HashSubjectRI getHashSubjectRI() {
@@ -82,6 +96,14 @@ public class WorkerInput implements Serializable {
 
     public void setFile(String file) {
         this.file = file;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
     @Override
