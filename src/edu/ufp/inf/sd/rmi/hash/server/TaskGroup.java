@@ -34,11 +34,12 @@ public class TaskGroup implements Serializable {
     private ObserverRI observer;
 
 
-    public TaskGroup(String hash, Integer encryption, String owner) {
+    public TaskGroup(String hash, Integer encryption, String owner, int plafond) {
         this.users = new ArrayList<>();
         this.hash = hash;
         this.encryption = encryption;
         this.owner = owner;
+        this.plafond = plafond;
     }
 
     public HashSubjectRI getHashSubjectRI() {

@@ -24,7 +24,7 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
     public boolean CreateTaskGroup(TaskGroup taskgroup, DBMockup db) {
 
         try{
-            TaskGroup tg = taskgroup;
+
             ArrayList<TaskGroup> tasks = db.ListTaskGroups();
 
             int id;
@@ -33,26 +33,20 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
             else
                 id = 0;
 
-            tg.setId(id);
-            tg.setPause(false);
-            tg.setSolved(false);
+            taskgroup.setId(id);
+            taskgroup.setPause(false);
+            taskgroup.setSolved(false);
 
             int lines = db.getLines();
             float subsets =  (float) lines/10;
             double new_subets = Math.ceil(subsets);
 
-            tg.setSubsets((int) new_subets);
-            tg.setLine(0);
-            tg.setHashSubjectRI(new HashSubjectImpl(id));
-            tg.setObserver(new ObserverImpl(id, tg.getHashSubjectRI(), taskgroup.getOwner()));
+            taskgroup.setSubsets((int) new_subets);
+            taskgroup.setLine(0);
+            taskgroup.setHashSubjectRI(new HashSubjectImpl(id));
+            taskgroup.setObserver(new ObserverImpl(id, taskgroup.getHashSubjectRI(), taskgroup.getOwner()));
 
-            for(User u : db.getUsers())
-            {
-                if (u.getUname().compareTo(taskgroup.getOwner())==0)
-                    tg.setPlafond(u.getCredits());
-            }
-
-            db.AddTaskGroup(tg);
+            db.AddTaskGroup(taskgroup);
         }catch (Exception e){
             System.out.println("[SingletonOperationsTaskGroups] - Create: " + e);
         }

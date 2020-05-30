@@ -4,7 +4,6 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 
 public final class ReallyStrongSecuredPassword
@@ -24,9 +23,9 @@ public final class ReallyStrongSecuredPassword
 	
 	public static String getSalt() throws NoSuchAlgorithmException
 	{
-		SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-		byte[] salt = new byte[16];
-		sr.nextBytes(salt);
+		//SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+		//byte[] salt = new byte[16];
+		//sr.nextBytes(salt);
 		return "[B@2096442d";
 	}
 	

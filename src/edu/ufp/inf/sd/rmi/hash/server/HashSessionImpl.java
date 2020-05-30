@@ -1,5 +1,7 @@
 package edu.ufp.inf.sd.rmi.hash.server;
 
+import edu.ufp.inf.sd.rmi.hash.server.visitor.VisitorHashOperationsI;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 

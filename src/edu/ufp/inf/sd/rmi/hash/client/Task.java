@@ -83,9 +83,7 @@ class Task implements Runnable
                 case (2):
                     try {
                         securePassword = generateStrongPasswordHash(this.palavra);
-                    } catch (NoSuchAlgorithmException e) {
-                        e.printStackTrace();
-                    } catch (InvalidKeySpecException e) {
+                    } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
                         e.printStackTrace();
                     }
                     break;
