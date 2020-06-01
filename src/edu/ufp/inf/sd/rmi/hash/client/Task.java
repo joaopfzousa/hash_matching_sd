@@ -9,6 +9,8 @@ import edu.ufp.inf.sd.rmi.util.lambdaworks.crypto.SCryptUtil;
 import java.rmi.RemoteException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static edu.ufp.inf.sd.rmi.hash.helpers.advanced.ReallyStrongSecuredPassword.generateStrongPasswordHash;
 import static edu.ufp.inf.sd.rmi.hash.helpers.sha.SHAExample.get_SHA_512_SecurePassword;
@@ -45,41 +47,10 @@ class Task implements Runnable
 
     public void run()
     {
-        if(this.observer.getLastObserverState().getMsg().compareTo("Delete") == 0)
-        {
-            System.out.println("[ThreadPool] -> A taskGroup com o id " + this.observer.getLastObserverState().getIdTaskGroup() +", foi o " + this.observer.getLastObserverState().getWorker() + " que  mandou a Mensagem -> " + this.observer.getLastObserverState().getMsg() + ", parei na linha = " + this.line);
-            return;
-        }
-
-        if(this.observer.getLastObserverState().getMsg().compareTo("Pause") == 0)
-        {
-            System.out.println("[ThreadPool] -> A taskGroup com o id " + this.observer.getLastObserverState().getIdTaskGroup() +", foi o " + this.observer.getLastObserverState().getWorker() + " que  mandou a Mensagem -> " + this.observer.getLastObserverState().getMsg() + ", parei na linha = " + this.line);
-
-            String msg = this.observer.getLastObserverState().getMsg();
-            int count = 0;
-            while(msg.compareTo("Pause") == 0)
-            {
-                msg = this.observer.getLastObserverState().getMsg();
-                count ++;
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if(count == 100)
-                    System.out.println("[ThreadPool] -> A mensagem enviada pelo " + this.observer.getLastObserverState().getWorker() + " ainda é -> " + this.observer.getLastObserverState().getMsg());
-            }
-
-            if(this.observer.getLastObserverState().getMsg().compareTo("Delete") == 0)
-            {
-                System.out.println("[ThreadPool] -> A taskGroup com o id " + this.observer.getLastObserverState().getIdTaskGroup() +", foi o " + this.observer.getLastObserverState().getWorker() + " que  mandou a Mensagem -> " + this.observer.getLastObserverState().getMsg() + ", parei na linha = " + this.line);
-                return;
-            }
-
-            if(this.observer.getLastObserverState().getMsg().compareTo("UnPause") == 0)
-            {
-                System.out.println("[ThreadPool] -> A taskGroup com o id " + this.observer.getLastObserverState().getIdTaskGroup() + ", foi o " + this.observer.getLastObserverState().getWorker() + " que  mandou a Mensagem -> " + this.observer.getLastObserverState().getMsg() + ", vou continuar na linha = " + this.line);
-            }
+        try {
+            this.observer.checkStates();
+        } catch (RemoteException e) {
+            e.printStackTrace();
         }
 
         try {
@@ -108,20 +79,21 @@ class Task implements Runnable
                     securePassword =  SCryptUtil.scrypt(this.palavra, 16, 16, 16);
                     break;
             }
+            this.observer.checkStates();
             Thread.sleep(1000);
             VisitorHashOperationsI v = null;
-            if (securePassword.compareTo(this.hash) == 0)
+            System.out.println(hash);
+            System.out.println(securePassword);
+            System.out.println();
+            System.out.println();
+            if (hash.compareTo(securePassword) == 0)
             {
-                System.out.println("palavra = " + this.palavra);
-                //System.out.println("Encontrei a hash na linha " + lnr.getLineNumber() + "!");
-                //observer (descobri a password)
-                //user recebe 10 créditos
-                //para worker
 
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, "testes");
+             //   System.out.println("palavra = " + this.palavra);
                 v = new VisitorRequestCredits(idTask,user,10);
-
             } else {
-                System.out.println("palavra = " + this.palavra);
+              //  System.out.println("palavra = " + this.palavra);
                 v = new VisitorRequestCredits(idTask,user,1);
             }
             session.acceptVisitor(v);

@@ -79,7 +79,7 @@ public class HashClient extends Thread {
                 System.out.println("\n-----> Please Register/Login <-----\n");
                 System.out.println("[1] -> Register");
                 System.out.println("[2] -> Login");
-                System.out.println("[0] -> Exit\n");
+                System.out.println("[-1] -> Exit\n");
 
                 System.out.print("Option: ");
                 String opt = in.nextLine();
@@ -248,7 +248,6 @@ public class HashClient extends Thread {
                                                 }
                                             }
                                         }
-
                                         v = new VisitorDeleteTaskGroup(idtask_delete);
                                         boolean delete = (boolean) session.acceptVisitor(v);
 
@@ -264,7 +263,6 @@ public class HashClient extends Thread {
                                         for (TaskGroup tg : join_tasks) {
                                             System.out.println("Id da TaskGroup = " + tg.getId());
                                         }
-
                                         System.out.print("Insert id: ");
                                         int id = tryParseInt(in.nextLine(), 0);
 
@@ -275,9 +273,8 @@ public class HashClient extends Thread {
                                                 break;
                                             }
                                         }
-
                                         while (!idexist) {
-                                            System.out.println("This id not exists");
+                                            System.out.println("This id does not exists");
                                             System.out.print("Insert id: ");
                                             id = tryParseInt(in.nextLine(), 0);
 
@@ -288,9 +285,7 @@ public class HashClient extends Thread {
                                                 }
                                             }
                                         }
-
                                         v = new VisitorJoinTaskGroup(user, id);
-
                                         try {
                                             WorkerInput wi = (WorkerInput) session.acceptVisitor(v);
                                             System.out.println(wi);
@@ -306,7 +301,6 @@ public class HashClient extends Thread {
                                         } catch (RemoteException e) {
                                             e.printStackTrace();
                                         }
-
                                         break;
                                     case -1:
                                         hashLoginRI.logout(user);
@@ -319,12 +313,13 @@ public class HashClient extends Thread {
                             System.out.println("[Session] - No Session, Error credentials\n");
                         }
                         break;
-                    case 0:
+                    case -1:
+                        tPool = null;
                         break;
                     default:
                         System.out.println("Wrong option");
                 }
-            } while (option != 0);
+            } while (option != -1);
         } catch (RemoteException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
@@ -342,7 +337,7 @@ public class HashClient extends Thread {
         }
     }
 
-    public boolean StartWorking(WorkerInput wi) throws RemoteException {
+    public void StartWorking(WorkerInput wi) throws RemoteException {
         try {
             File f = new File(wi.getFile());
             String f1 = f.getAbsolutePath();
@@ -354,46 +349,14 @@ public class HashClient extends Thread {
                 String line;
                 while (lnr.readLine() != null && lnr.getLineNumber() < wi.getLine()) {
                 }
-
                 while ((line = lnr.readLine()) != null && lnr.getLineNumber() < wi.getLine() + wi.getSubset()) {
-                    //System.out.println("this.observer.getLastObserverState().getMsg() = " + this.observer.getLastObserverState().getMsg());
-
-                    if (this.observer.getLastObserverState().getMsg().compareTo("Delete") == 0) {
-                        System.out.println("[CLIENT] -> A taskGroup com o id " + this.observer.getLastObserverState().getIdTaskGroup() + ", foi o " + this.observer.getLastObserverState().getWorker() + " que  mandou a Mensagem -> " + this.observer.getLastObserverState().getMsg() + ", parei na linha = " + lnr.getLineNumber());
-                        break;
-                    }
-
-                    if (this.observer.getLastObserverState().getMsg().compareTo("Pause") == 0) {
-                        System.out.println("[CLIENT] -> A taskGroup com o id " + this.observer.getLastObserverState().getIdTaskGroup() + ", foi o " + this.observer.getLastObserverState().getWorker() + " que  mandou a Mensagem -> " + this.observer.getLastObserverState().getMsg() + ", parei na linha = " + lnr.getLineNumber());
-
-                        String msg = this.observer.getLastObserverState().getMsg();
-                        int count = 0;
-                        while (msg.compareTo("Pause") == 0) {
-                            msg = this.observer.getLastObserverState().getMsg();
-                            count++;
-                            Thread.sleep(2000);
-                            if (count == 100)
-                                System.out.println("[CLIENT] -> A mensagem enviada pelo " + this.observer.getLastObserverState().getWorker() + " ainda é -> " + this.observer.getLastObserverState().getMsg());
-                        }
-
-                        if (this.observer.getLastObserverState().getMsg().compareTo("Delete") == 0) {
-                            System.out.println("[CLIENT] -> A taskGroup com o id " + this.observer.getLastObserverState().getIdTaskGroup() + ", foi o " + this.observer.getLastObserverState().getWorker() + " que  mandou a Mensagem -> " + this.observer.getLastObserverState().getMsg() + ", parei na linha = " + lnr.getLineNumber());
-                            break;
-                        }
-
-                        if (this.observer.getLastObserverState().getMsg().compareTo("UnPause") == 0) {
-                            System.out.println("[CLIENT] -> A taskGroup com o id " + this.observer.getLastObserverState().getIdTaskGroup() + ", foi o " + this.observer.getLastObserverState().getWorker() + " que  mandou a Mensagem -> " + this.observer.getLastObserverState().getMsg() + ", vou continuar na linha = " + lnr.getLineNumber());
-                        }
-                    }
-
+                    this.observer.checkStates();
                     Runnable r = new Task(wi.getIdTask(),wi.getUser(),line, wi.getEncryption(), wi.getHash(), this.observer, lnr.getLineNumber(),session);
-
                     tPool.execute(r);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
     }
 }

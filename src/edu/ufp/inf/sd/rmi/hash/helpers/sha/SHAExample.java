@@ -35,7 +35,6 @@ public final class SHAExample {
 			sr.nextBytes(salt);
 			return salt.toString();
 		*/
-
 		return "[B@2096442d";
 	}
 }

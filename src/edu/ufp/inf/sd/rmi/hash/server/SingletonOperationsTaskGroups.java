@@ -121,14 +121,13 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
         try {
             TaskGroup tg = db.ListTaskGroups().get(idtask);
 
-            if (tg.getPlafond() < credits) {
+            if (tg.getPlafond() == 0 || tg.getPlafond() < credits) {
                 State s = new State("Pause", tg.getOwner(), tg.getId());
                 tg.getHashSubjectRI().setState(s);
                 db.ListTaskGroups().get(idtask).setPause(true);
                 return false;
             } else {
                 for (User u : db.getUsers()) {
-                    System.out.println(u + "\n User" + user);
                     if (u.getUname().compareTo(user) == 0) {
                         u.setCredits(u.getCredits() + credits);
                         int plafond = tg.getPlafond();
