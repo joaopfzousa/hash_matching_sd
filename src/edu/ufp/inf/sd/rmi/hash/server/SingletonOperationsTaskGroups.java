@@ -61,7 +61,7 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
             boolean join = db.JoinWorkerinTaskGroup(tg, user);
 
             if (join && tg.getLine() < db.getLines()) {
-                WorkerInput wi = new WorkerInput(tg.getId(), tg.getLine(), tg.getSubsets(), tg.getHash(), tg.getEncryption(), tg.getStrategy(), "C:\\Users\\hugod\\IdeaProjects\\SD_Project\\files\\passwords.txt", tg.getHashSubjectRI(), user);
+                WorkerInput wi = new WorkerInput(tg.getId(), tg.getLine(), tg.getSubsets(), tg.getHash(), tg.getEncryption(), tg.getStrategy(), "/Users/joaopfzousa/IdeaProjects/SD_Project/files/passwords.txt", tg.getHashSubjectRI(), user);
 
                 tg.setLine(tg.getLine() + tg.getSubsets() + 1);
 
