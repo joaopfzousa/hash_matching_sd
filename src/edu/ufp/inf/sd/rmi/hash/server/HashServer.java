@@ -44,7 +44,7 @@ public class HashServer {
                 BufferedReader reader = null;
                 int lines = 0;
                 try {
-                    reader = new BufferedReader(new FileReader("/Users/joaopfzousa/IdeaProjects/SD_Project/files/passwords.txt"));
+                    reader = new BufferedReader(new FileReader("C:\\Users\\hugod\\IdeaProjects\\SD_Project\\files\\passwords.txt"));
                     while (reader.readLine() != null) lines++;
                     reader.close();
                 } catch (Exception e) {

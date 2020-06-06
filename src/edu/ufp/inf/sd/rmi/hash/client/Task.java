@@ -9,8 +9,6 @@ import edu.ufp.inf.sd.rmi.util.lambdaworks.crypto.SCryptUtil;
 import java.rmi.RemoteException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static edu.ufp.inf.sd.rmi.hash.helpers.advanced.ReallyStrongSecuredPassword.generateStrongPasswordHash;
 import static edu.ufp.inf.sd.rmi.hash.helpers.sha.SHAExample.get_SHA_512_SecurePassword;
@@ -82,18 +80,13 @@ class Task implements Runnable
             this.observer.checkStates();
             Thread.sleep(1000);
             VisitorHashOperationsI v = null;
-            System.out.println(hash);
-            System.out.println(securePassword);
-            System.out.println();
-            System.out.println();
             if (hash.compareTo(securePassword) == 0)
             {
 
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, "testes");
-             //   System.out.println("palavra = " + this.palavra);
+                System.out.println("Word found " + palavra);
+                //   System.out.println("palavra = " + this.palavra);
                 v = new VisitorRequestCredits(idTask,user,10);
             } else {
-              //  System.out.println("palavra = " + this.palavra);
                 v = new VisitorRequestCredits(idTask,user,1);
             }
             session.acceptVisitor(v);

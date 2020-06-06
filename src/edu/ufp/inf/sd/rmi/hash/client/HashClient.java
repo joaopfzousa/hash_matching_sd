@@ -4,19 +4,13 @@ import edu.ufp.inf.sd.rmi.hash.server.*;
 import edu.ufp.inf.sd.rmi.hash.server.visitor.*;
 import edu.ufp.inf.sd.rmi.util.rmisetup.SetupContextRMI;
 import edu.ufp.inf.sd.rmi.util.threading.ThreadPool;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 
 import java.io.*;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
-import java.security.Key;
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,17 +18,12 @@ import java.util.logging.Logger;
 
 public class HashClient extends Thread {
 
-    private SetupContextRMI contextRMI;
-
-    private HashLoginRI hashLoginRI;
-
-    private HashSubjectRI hashSubjectRI;
-
-    private ObserverImpl observer;
-
-    private ThreadPool tPool = new ThreadPool(5);
-
     HashSessionRI session = null;
+    private SetupContextRMI contextRMI;
+    private HashLoginRI hashLoginRI;
+    private HashSubjectRI hashSubjectRI;
+    private ObserverImpl observer;
+    private ThreadPool tPool = new ThreadPool(100);
 
     public HashClient(String[] args) {
         try {
@@ -114,13 +103,7 @@ public class HashClient extends Thread {
                         System.out.print("Please insert your password: ");
                         String password = in.nextLine();
 
-                        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-
-                        String jws = Jwts.builder().setSubject(user).signWith(key).compact();
-
-                        System.out.println("JWT = " + jws);
-
-                         session = login(user, password);
+                        session = login(user, password);
                         if (session != null) {
                             System.out.println("\n\t\tWelcome " + user);
                             VisitorHashOperationsI v = null;
@@ -181,7 +164,7 @@ public class HashClient extends Thread {
                                         if (create) {
                                             System.out.println("Created TaskGroup sucessfully!");
                                         } else {
-                                            System.out.println("TakGroup not created!");
+                                            System.out.println("TakGroup not created! Please check inserted data or your credits");
                                         }
                                         break;
                                     case 3:
@@ -298,21 +281,25 @@ public class HashClient extends Thread {
                                                 }
                                             }
                                         }
-                                        v = new VisitorJoinTaskGroup(user, id);
-                                        try {
-                                            WorkerInput wi = (WorkerInput) session.acceptVisitor(v);
-                                            System.out.println(wi);
+                                        if (join_tasks.get(id).getOwner().compareTo(user) == 0) {
+                                            System.out.println("Unable to join your own Task group");
+                                        } else {
+                                            v = new VisitorJoinTaskGroup(user, id);
+                                            try {
+                                                WorkerInput wi = (WorkerInput) session.acceptVisitor(v);
+                                                System.out.println(wi);
 
-                                            if (wi != null) {
-                                                hashSubjectRI = wi.getHashSubjectRI();
-                                                this.observer = new ObserverImpl(id, this.hashSubjectRI, user);
-                                                this.StartWorking(wi);
-
-                                            } else {
-                                                System.out.println("Não tenho linhas para ler!!!");
+                                                if (wi != null) {
+                                                    hashSubjectRI = wi.getHashSubjectRI();
+                                                    this.observer = new ObserverImpl(id, this.hashSubjectRI, user);
+                                                    this.observer = new ObserverImpl(id, this.hashSubjectRI, user);
+                                                    this.StartWorking(wi);
+                                                } else {
+                                                    System.out.println("Não tenho linhas para ler!!!");
+                                                }
+                                            } catch (RemoteException e) {
+                                                e.printStackTrace();
                                             }
-                                        } catch (RemoteException e) {
-                                            e.printStackTrace();
                                         }
                                         break;
                                     case -1:
@@ -364,7 +351,7 @@ public class HashClient extends Thread {
                 }
                 while ((line = lnr.readLine()) != null && lnr.getLineNumber() < wi.getLine() + wi.getSubset()) {
                     this.observer.checkStates();
-                    Runnable r = new Task(wi.getIdTask(),wi.getUser(),line, wi.getEncryption(), wi.getHash(), this.observer, lnr.getLineNumber(),session);
+                    Runnable r = new Task(wi.getIdTask(), wi.getUser(), line, wi.getEncryption(), wi.getHash(), this.observer, lnr.getLineNumber(), session);
                     tPool.execute(r);
                 }
             }

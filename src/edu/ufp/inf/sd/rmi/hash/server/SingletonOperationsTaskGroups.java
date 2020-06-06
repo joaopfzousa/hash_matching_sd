@@ -1,6 +1,7 @@
 package edu.ufp.inf.sd.rmi.hash.server;
 
 import edu.ufp.inf.sd.rmi.hash.client.ObserverImpl;
+import edu.ufp.inf.sd.rmi.util.States;
 
 import java.util.ArrayList;
 
@@ -45,7 +46,16 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
             taskgroup.setLine(0);
             taskgroup.setHashSubjectRI(new HashSubjectImpl(id));
             taskgroup.setObserver(new ObserverImpl(id, taskgroup.getHashSubjectRI(), taskgroup.getOwner()));
-
+            for (int i = 0; i < db.getUsers().size(); i++) {
+                if (db.getUsers().get(i).getUname().compareTo(taskgroup.getOwner()) == 0) {
+                    if (!(db.getUsers().get(i).getCredits() < taskgroup.getPlafond()))
+                    {       db.getUsers().get(i).setCredits(db.getUsers().get(i).getCredits() - taskgroup.getPlafond());
+                            break;
+                    }
+                    else
+                        return false;
+                }
+            }
             db.AddTaskGroup(taskgroup);
         } catch (Exception e) {
             System.out.println("[SingletonOperationsTaskGroups] - Create: " + e);
@@ -61,7 +71,7 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
             boolean join = db.JoinWorkerinTaskGroup(tg, user);
 
             if (join && tg.getLine() < db.getLines()) {
-                WorkerInput wi = new WorkerInput(tg.getId(), tg.getLine(), tg.getSubsets(), tg.getHash(), tg.getEncryption(), tg.getStrategy(), "/Users/joaopfzousa/IdeaProjects/SD_Project/files/passwords.txt", tg.getHashSubjectRI(), user);
+                WorkerInput wi = new WorkerInput(tg.getId(), tg.getLine(), tg.getSubsets(), tg.getHash(), tg.getEncryption(), tg.getStrategy(), "C:\\Users\\hugod\\IdeaProjects\\SD_Project\\files\\passwords.txt", tg.getHashSubjectRI(), user);
 
                 tg.setLine(tg.getLine() + tg.getSubsets() + 1);
 
@@ -81,11 +91,11 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
             boolean isPause = db.PauseTaskGroup(tg);
 
             if (isPause) {
-                State s = new State("Pause", tg.getOwner(), tg.getId());
+                State s = new State(States.Pause, tg.getOwner(), tg.getId());
                 tg.getHashSubjectRI().setState(s);
                 db.ListTaskGroups().get(idtask).setPause(true);
             } else {
-                State s = new State("UnPause", tg.getOwner(), tg.getId());
+                State s = new State(States.UnPause, tg.getOwner(), tg.getId());
                 tg.getHashSubjectRI().setState(s);
                 db.ListTaskGroups().get(idtask).setPause(false);
             }
@@ -105,7 +115,7 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
             boolean delete = db.DeleteTaskGroup(tg);
 
             if (delete) {
-                State s = new State("Delete", tg.getOwner(), tg.getId());
+                State s = new State(States.Deleted, tg.getOwner(), tg.getId());
                 tg.getHashSubjectRI().setState(s);
             }
 
@@ -122,7 +132,7 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
             TaskGroup tg = db.ListTaskGroups().get(idtask);
 
             if (tg.getPlafond() == 0 || tg.getPlafond() < credits) {
-                State s = new State("Pause", tg.getOwner(), tg.getId());
+                State s = new State(States.NoCredit, tg.getOwner(), tg.getId());
                 tg.getHashSubjectRI().setState(s);
                 db.ListTaskGroups().get(idtask).setPause(true);
                 return false;

@@ -51,34 +51,28 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
 
             switch (this.getLastObserverState().getMsg()) {
                 case (States.Pause):
-                    System.out.println("[CLIENT] -> A taskGroup com o id " + this.getLastObserverState().getIdTaskGroup() + ", foi o " + this.getLastObserverState().getWorker() + " que  mandou a Mensagem -> " + this.getLastObserverState().getMsg());
+                    System.out.println("[CLIENT] -> The taskGroup with id " + this.getLastObserverState().getIdTaskGroup() + ", user " + this.getLastObserverState().getWorker() + " sent-> " + States.Pause);
+                    String msg = this.getLastObserverState().getMsg();
+                    int count = 0;
+                    while (msg.compareTo(States.Pause) == 0) {
+                        msg = this.getLastObserverState().getMsg();
+                        count++;
+
+                        Thread.sleep(2000);
+
+                        if (count == 100)
+                            System.out.println("[CLIENT] -> The current state is still " + States.Pause);
+                    }
+                    break;
+                case (States.UnPause):
+                    System.out.println("[CLIENT] -> The taskGroup with id " + this.getLastObserverState().getIdTaskGroup() + ", user " + this.getLastObserverState().getWorker() + " sent-> " + States.UnPause);
                     break;
                 case (States.Deleted):
-                    System.out.println("[CLIENT] -> A taskGroup com o id " + this.getLastObserverState().getIdTaskGroup() + ", foi o " + this.getLastObserverState().getWorker() + " que  mandou a Mensagem -> " + this.getLastObserverState().getMsg());
+                    System.out.println("[CLIENT] -> The taskGroup with id " + this.getLastObserverState().getIdTaskGroup() + ", user " + this.getLastObserverState().getWorker() + " sent-> " + States.Deleted);
                     break;
-            }
-
-            if (this.getLastObserverState().getMsg().compareTo("Pause") == 0) {
-                System.out.println("[CLIENT] -> A taskGroup com o id " + this.getLastObserverState().getIdTaskGroup() + ", foi o " + this.getLastObserverState().getWorker() + " que  mandou a Mensagem -> " + this.getLastObserverState().getMsg());
-
-                String msg = this.getLastObserverState().getMsg();
-                int count = 0;
-                while (msg.compareTo("Pause") == 0) {
-                    msg = this.getLastObserverState().getMsg();
-                    count++;
-
-                    Thread.sleep(2000);
-
-                    if (count == 100)
-                        System.out.println("[CLIENT] -> A mensagem enviada pelo " + this.getLastObserverState().getWorker() + " ainda é -> " + this.getLastObserverState().getMsg());
-                }
-
-                if (this.getLastObserverState().getMsg().compareTo("Delete") == 0) {
-                }
-
-                if (this.getLastObserverState().getMsg().compareTo("UnPause") == 0) {
-                    System.out.println("[CLIENT] -> A taskGroup com o id " + this.getLastObserverState().getIdTaskGroup() + ", foi o " + this.getLastObserverState().getWorker() + " que  mandou a Mensagem -> " + this.getLastObserverState().getMsg() + ", vou continuar");
-                }
+                case (States.NoCredit):
+                        System.out.println("[CLIENT] -> The taskGroup with id " + this.getLastObserverState().getIdTaskGroup() + ", has no more credits");
+                    break;
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
