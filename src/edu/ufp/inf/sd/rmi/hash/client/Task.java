@@ -4,6 +4,7 @@ import edu.ufp.inf.sd.rmi.hash.helpers.bcrypt.BCrypt;
 import edu.ufp.inf.sd.rmi.hash.server.HashSessionRI;
 import edu.ufp.inf.sd.rmi.hash.server.visitor.VisitorHashOperationsI;
 import edu.ufp.inf.sd.rmi.hash.server.visitor.VisitorRequestCredits;
+import edu.ufp.inf.sd.rmi.util.States;
 import edu.ufp.inf.sd.rmi.util.lambdaworks.crypto.SCryptUtil;
 
 import java.rmi.RemoteException;
@@ -47,6 +48,13 @@ class Task implements Runnable
     {
         try {
             this.observer.checkStates();
+            if(this.observer.getLastObserverState().getMsg().compareTo(States.Deleted) == 0)
+            {
+                return;
+            }else if(this.observer.getLastObserverState().getMsg().compareTo(States.Solved) == 0)
+            {
+                return;
+            }
         } catch (RemoteException e) {
             e.printStackTrace();
         }
@@ -79,15 +87,27 @@ class Task implements Runnable
             }
 
             this.observer.checkStates();
+            if(this.observer.getLastObserverState().getMsg().compareTo(States.Deleted) == 0)
+            {
+                return;
+            }else if(this.observer.getLastObserverState().getMsg().compareTo(States.Solved) == 0)
+            {
+                return;
+            }else if(this.observer.getLastObserverState().getMsg().compareTo(States.NoCredit) == 0)
+            {
+                return;
+            }
+
             Thread.sleep(1000);
             VisitorHashOperationsI v = null;
 
+            System.out.println(securePassword);
             if (hash.compareTo(securePassword) == 0)
             {
                 System.out.println("Word found " + palavra);
-                v = new VisitorRequestCredits(idTask,user,10);
+                v = new VisitorRequestCredits(idTask, user, 10);
             } else {
-                v = new VisitorRequestCredits(idTask,user,1);
+                v = new VisitorRequestCredits(idTask, user, 1);
             }
             session.acceptVisitor(v);
             Thread.sleep(5000);

@@ -71,7 +71,7 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
             boolean join = db.JoinWorkerinTaskGroup(tg, user);
 
             if (join && tg.getLine() < db.getLines()) {
-                WorkerInput wi = new WorkerInput(tg.getId(), tg.getLine(), tg.getSubsets(), tg.getHash(), tg.getEncryption(), tg.getStrategy(), "C:\\Users\\hugod\\IdeaProjects\\SD_Project\\files\\passwords.txt", tg.getHashSubjectRI(), user);
+                WorkerInput wi = new WorkerInput(tg.getId(), tg.getLine(), tg.getSubsets(), tg.getHash(), tg.getEncryption(), tg.getStrategy(), "/Users/joaopfzousa/IdeaProjects/SD_Project/files/passwords.txt", tg.getHashSubjectRI(), user);
 
                 tg.setLine(tg.getLine() + tg.getSubsets() + 1);
 
@@ -131,14 +131,24 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
         try {
             TaskGroup tg = db.ListTaskGroups().get(idtask);
 
-            if (tg.getPlafond() == 0 || tg.getPlafond() < credits) {
+            if(credits == 10)
+            {
+                State s = new State(States.Solved, tg.getOwner(), tg.getId());
+                tg.getHashSubjectRI().setState(s);
+                db.ListTaskGroups().get(idtask).setSolved(true);
+            }
+
+            if (tg.getPlafond() == 0 || tg.getPlafond() < credits)
+            {
                 State s = new State(States.NoCredit, tg.getOwner(), tg.getId());
                 tg.getHashSubjectRI().setState(s);
                 db.ListTaskGroups().get(idtask).setPause(true);
                 return false;
             } else {
-                for (User u : db.getUsers()) {
-                    if (u.getUname().compareTo(user) == 0) {
+                for (User u : db.getUsers())
+                {
+                    if (u.getUname().compareTo(user) == 0)
+                    {
                         u.setCredits(u.getCredits() + credits);
                         int plafond = tg.getPlafond();
                         tg.setPlafond(plafond - credits);

@@ -2,18 +2,15 @@ package edu.ufp.inf.sd.rmi.hash.client;
 
 import edu.ufp.inf.sd.rmi.hash.server.*;
 import edu.ufp.inf.sd.rmi.hash.server.visitor.*;
+import edu.ufp.inf.sd.rmi.util.States;
 import edu.ufp.inf.sd.rmi.util.rmisetup.SetupContextRMI;
 import edu.ufp.inf.sd.rmi.util.threading.ThreadPool;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 
 import java.io.*;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -112,12 +109,6 @@ public class HashClient extends Thread {
                         String user = in.nextLine();
                         System.out.print("Please insert your password: ");
                         String password = in.nextLine();
-
-                        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-
-                        String jws = Jwts.builder().setSubject(user).signWith(key).compact();
-
-                        System.out.println("JWT = " + jws);
 
                         session = login(user, password);
                         if (session != null) {
@@ -368,6 +359,17 @@ public class HashClient extends Thread {
                 }
                 while ((line = lnr.readLine()) != null && lnr.getLineNumber() < wi.getLine() + wi.getSubset()) {
                     this.observer.checkStates();
+
+                    if(this.observer.getLastObserverState().getMsg().compareTo(States.Deleted) == 0)
+                    {
+                      return;
+                    }else if(this.observer.getLastObserverState().getMsg().compareTo(States.Solved) == 0)
+                    {
+                        hashSubjectRI.detach(this.observer);
+                    }else if(this.observer.getLastObserverState().getMsg().compareTo(States.NoCredit) == 0)
+                    {
+                        return;
+                    }
                     Runnable r = new Task(wi.getIdTask(), wi.getUser(), line, wi.getEncryption(), wi.getHash(), this.observer, lnr.getLineNumber(), session);
                     tPool.execute(r);
                 }

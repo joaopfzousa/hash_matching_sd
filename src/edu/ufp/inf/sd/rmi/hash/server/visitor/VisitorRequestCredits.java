@@ -9,7 +9,9 @@ import java.io.Serializable;
 
 public class VisitorRequestCredits implements VisitorHashOperationsI, Serializable {
     private int idtask;
+
     private String user;
+
     private int credits;
 
     public VisitorRequestCredits(int idtask, String user, int credits) {

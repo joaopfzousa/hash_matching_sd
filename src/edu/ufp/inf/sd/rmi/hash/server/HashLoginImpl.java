@@ -21,15 +21,18 @@ public class HashLoginImpl extends UnicastRemoteObject implements HashLoginRI {
     }
 
     @Override
-    public HashSessionRI login(String username, String password) throws RemoteException {
-        if (this.sessions.containsKey(username)) {
+    public HashSessionRI login(String username, String password) throws RemoteException
+    {
+        if (this.sessions.containsKey(username))
+        {
             return this.sessions.get(username);
         }
 
-        if (this.database.exists(username, password)) {
-            HashSessionImpl lib = new HashSessionImpl(this.database);
-            this.sessions.put(username, lib);
+        if (this.database.exists(username, password))
+        {
+            HashSessionImpl lib = new HashSessionImpl(this.database, username);
 
+            this.sessions.put(username, lib);
             return lib;
         }
         return null;
