@@ -77,14 +77,14 @@ class Task implements Runnable
                     securePassword =  SCryptUtil.scrypt(this.palavra, 16, 16, 16);
                     break;
             }
+
             this.observer.checkStates();
             Thread.sleep(1000);
             VisitorHashOperationsI v = null;
+
             if (hash.compareTo(securePassword) == 0)
             {
-
                 System.out.println("Word found " + palavra);
-                //   System.out.println("palavra = " + this.palavra);
                 v = new VisitorRequestCredits(idTask,user,10);
             } else {
                 v = new VisitorRequestCredits(idTask,user,1);

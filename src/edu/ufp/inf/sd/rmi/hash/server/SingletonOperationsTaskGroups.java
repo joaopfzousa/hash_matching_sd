@@ -49,10 +49,10 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
             for (int i = 0; i < db.getUsers().size(); i++) {
                 if (db.getUsers().get(i).getUname().compareTo(taskgroup.getOwner()) == 0) {
                     if (!(db.getUsers().get(i).getCredits() < taskgroup.getPlafond()))
-                    {       db.getUsers().get(i).setCredits(db.getUsers().get(i).getCredits() - taskgroup.getPlafond());
-                            break;
-                    }
-                    else
+                    {
+                        db.getUsers().get(i).setCredits(db.getUsers().get(i).getCredits() - taskgroup.getPlafond());
+                        break;
+                    }else
                         return false;
                 }
             }

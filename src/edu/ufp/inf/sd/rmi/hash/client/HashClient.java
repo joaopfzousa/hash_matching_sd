@@ -4,12 +4,16 @@ import edu.ufp.inf.sd.rmi.hash.server.*;
 import edu.ufp.inf.sd.rmi.hash.server.visitor.*;
 import edu.ufp.inf.sd.rmi.util.rmisetup.SetupContextRMI;
 import edu.ufp.inf.sd.rmi.util.threading.ThreadPool;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
 import java.io.*;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -19,11 +23,17 @@ import java.util.logging.Logger;
 public class HashClient extends Thread {
 
     HashSessionRI session = null;
+
     private SetupContextRMI contextRMI;
+
     private HashLoginRI hashLoginRI;
+
     private HashSubjectRI hashSubjectRI;
+
     private ObserverImpl observer;
-    private ThreadPool tPool = new ThreadPool(100);
+
+    private ThreadPool tPool = new ThreadPool(5);
+
 
     public HashClient(String[] args) {
         try {
@@ -102,6 +112,12 @@ public class HashClient extends Thread {
                         String user = in.nextLine();
                         System.out.print("Please insert your password: ");
                         String password = in.nextLine();
+
+                        Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+
+                        String jws = Jwts.builder().setSubject(user).signWith(key).compact();
+
+                        System.out.println("JWT = " + jws);
 
                         session = login(user, password);
                         if (session != null) {
@@ -281,6 +297,7 @@ public class HashClient extends Thread {
                                                 }
                                             }
                                         }
+
                                         if (join_tasks.get(id).getOwner().compareTo(user) == 0) {
                                             System.out.println("Unable to join your own Task group");
                                         } else {

@@ -71,7 +71,7 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
                     System.out.println("[CLIENT] -> The taskGroup with id " + this.getLastObserverState().getIdTaskGroup() + ", user " + this.getLastObserverState().getWorker() + " sent-> " + States.Deleted);
                     break;
                 case (States.NoCredit):
-                        System.out.println("[CLIENT] -> The taskGroup with id " + this.getLastObserverState().getIdTaskGroup() + ", has no more credits");
+                    System.out.println("[CLIENT] -> The taskGroup with id " + this.getLastObserverState().getIdTaskGroup() + ", has no more credits");
                     break;
             }
         } catch (InterruptedException e) {
