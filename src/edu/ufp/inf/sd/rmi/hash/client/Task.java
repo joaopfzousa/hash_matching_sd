@@ -47,73 +47,54 @@ class Task implements Runnable
     public void run()
     {
         try {
-            this.observer.checkStates();
-            if(this.observer.getLastObserverState().getMsg().compareTo(States.Deleted) == 0)
+            if(this.observer.checkStates())
             {
-                return;
-            }else if(this.observer.getLastObserverState().getMsg().compareTo(States.Solved) == 0)
-            {
-                return;
+                try {
+                    String securePassword = "";
+
+                    switch (this.encrypt)
+                    {
+                        case (1):
+                            try {
+                                securePassword = get_SHA_512_SecurePassword(this.palavra);
+                            } catch (NoSuchAlgorithmException e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        case (2):
+                            try {
+                                securePassword = generateStrongPasswordHash(this.palavra);
+                            } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        case (3):
+                            securePassword = BCrypt.hashpw(this.palavra, BCrypt.gensalt(12));
+                            break;
+                        case (4):
+                            securePassword =  SCryptUtil.scrypt(this.palavra, 16, 16, 16);
+                            break;
+                    }
+
+                    Thread.sleep(1000);
+                    VisitorHashOperationsI v = null;
+
+                    //System.out.println(securePassword);
+                    if (hash.compareTo(securePassword) == 0)
+                    {
+                        System.out.println("Word found " + palavra);
+                        v = new VisitorRequestCredits(idTask, user, 10);
+                    } else {
+                        v = new VisitorRequestCredits(idTask, user, 1);
+                    }
+                    session.acceptVisitor(v);
+                    Thread.sleep(5000);
+                } catch (InterruptedException | RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-
-        try {
-            String securePassword = "";
-
-            switch (this.encrypt)
-            {
-                case (1):
-                    try {
-                        securePassword = get_SHA_512_SecurePassword(this.palavra);
-                    } catch (NoSuchAlgorithmException e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                case (2):
-                    try {
-                        securePassword = generateStrongPasswordHash(this.palavra);
-                    } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                case (3):
-                    securePassword = BCrypt.hashpw(this.palavra, BCrypt.gensalt(12));
-                    break;
-                case (4):
-                    securePassword =  SCryptUtil.scrypt(this.palavra, 16, 16, 16);
-                    break;
-            }
-
-            this.observer.checkStates();
-            if(this.observer.getLastObserverState().getMsg().compareTo(States.Deleted) == 0)
-            {
-                return;
-            }else if(this.observer.getLastObserverState().getMsg().compareTo(States.Solved) == 0)
-            {
-                return;
-            }else if(this.observer.getLastObserverState().getMsg().compareTo(States.NoCredit) == 0)
-            {
-                return;
-            }
-
-            Thread.sleep(1000);
-            VisitorHashOperationsI v = null;
-
-            System.out.println(securePassword);
-            if (hash.compareTo(securePassword) == 0)
-            {
-                System.out.println("Word found " + palavra);
-                v = new VisitorRequestCredits(idTask, user, 10);
-            } else {
-                v = new VisitorRequestCredits(idTask, user, 1);
-            }
-            session.acceptVisitor(v);
-            Thread.sleep(5000);
-        } catch (InterruptedException | RemoteException e) {
-            e.printStackTrace();
-        }
-        //System.out.println(securePassword);
     }
 }

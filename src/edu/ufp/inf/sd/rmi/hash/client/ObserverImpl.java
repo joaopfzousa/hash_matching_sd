@@ -46,7 +46,7 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
     }
 
     @Override
-    public void checkStates() throws RemoteException {
+    public boolean checkStates() throws RemoteException {
         try {
 
             switch (this.getLastObserverState().getMsg()) {
@@ -60,26 +60,29 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
 
                         Thread.sleep(2000);
 
-                        if (count == 100)
+                        if (count == 5)
                             System.out.println("[CLIENT] -> The current state is still " + States.Pause);
                     }
-                    break;
+                    return this.checkStates();
                 case (States.UnPause):
                     System.out.println("[CLIENT] -> The taskGroup with id " + this.getLastObserverState().getIdTaskGroup() + ", user " + this.getLastObserverState().getWorker() + " sent-> " + States.UnPause);
-                    break;
+                    return true;
                 case (States.Deleted):
                     System.out.println("[CLIENT] -> The taskGroup with id " + this.getLastObserverState().getIdTaskGroup() + ", user " + this.getLastObserverState().getWorker() + " sent-> " + States.Deleted);
-                    break;
+                    return false;
                 case (States.NoCredit):
                     System.out.println("[CLIENT] -> The taskGroup with id " + this.getLastObserverState().getIdTaskGroup() + ", has no more credits");
-                    break;
+                    return false;
                 case (States.Solved):
                     System.out.println("[CLIENT] -> The taskGroup with id " + this.getLastObserverState().getIdTaskGroup() + ", hash is solved");
-                    break;
+                    return false;
+                default:
+                    return true;
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     @Override

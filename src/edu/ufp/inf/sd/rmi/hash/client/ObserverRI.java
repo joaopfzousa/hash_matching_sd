@@ -6,5 +6,5 @@ import java.rmi.RemoteException;
 public interface ObserverRI extends Remote {
     public void update() throws RemoteException;
     public int getIdTaskGroup() throws RemoteException;
-    public void checkStates() throws RemoteException;
+    public boolean checkStates() throws RemoteException;
 }

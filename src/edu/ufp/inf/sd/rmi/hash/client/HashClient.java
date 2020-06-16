@@ -5,6 +5,7 @@ import edu.ufp.inf.sd.rmi.hash.server.visitor.*;
 import edu.ufp.inf.sd.rmi.util.States;
 import edu.ufp.inf.sd.rmi.util.rmisetup.SetupContextRMI;
 import edu.ufp.inf.sd.rmi.util.threading.ThreadPool;
+import io.jsonwebtoken.Jwts;
 
 import java.io.*;
 import java.rmi.NotBoundException;
@@ -358,20 +359,12 @@ public class HashClient extends Thread {
                 while (lnr.readLine() != null && lnr.getLineNumber() < wi.getLine()) {
                 }
                 while ((line = lnr.readLine()) != null && lnr.getLineNumber() < wi.getLine() + wi.getSubset()) {
-                    this.observer.checkStates();
 
-                    if(this.observer.getLastObserverState().getMsg().compareTo(States.Deleted) == 0)
+                    if(this.observer.checkStates())
                     {
-                      return;
-                    }else if(this.observer.getLastObserverState().getMsg().compareTo(States.Solved) == 0)
-                    {
-                        hashSubjectRI.detach(this.observer);
-                    }else if(this.observer.getLastObserverState().getMsg().compareTo(States.NoCredit) == 0)
-                    {
-                        return;
+                        Runnable r = new Task(wi.getIdTask(), wi.getUser(), line, wi.getEncryption(), wi.getHash(), this.observer, lnr.getLineNumber(), session);
+                        tPool.execute(r);
                     }
-                    Runnable r = new Task(wi.getIdTask(), wi.getUser(), line, wi.getEncryption(), wi.getHash(), this.observer, lnr.getLineNumber(), session);
-                    tPool.execute(r);
                 }
             }
         } catch (Exception e) {
