@@ -41,10 +41,6 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
         return idTaskGroup;
     }
 
-    public void setIdTaskGroup(int idTaskGroup) {
-        this.idTaskGroup = idTaskGroup;
-    }
-
     @Override
     public boolean checkStates() throws RemoteException {
         try {
@@ -69,12 +65,15 @@ public class ObserverImpl extends UnicastRemoteObject implements ObserverRI {
                     return true;
                 case (States.Deleted):
                     System.out.println("[CLIENT] -> The taskGroup with id " + this.getLastObserverState().getIdTaskGroup() + ", user " + this.getLastObserverState().getWorker() + " sent-> " + States.Deleted);
+                    hashSubjectRI.detach(this);
                     return false;
                 case (States.NoCredit):
                     System.out.println("[CLIENT] -> The taskGroup with id " + this.getLastObserverState().getIdTaskGroup() + ", has no more credits");
+                    hashSubjectRI.detach(this);
                     return false;
                 case (States.Solved):
                     System.out.println("[CLIENT] -> The taskGroup with id " + this.getLastObserverState().getIdTaskGroup() + ", hash is solved");
+                    hashSubjectRI.detach(this);
                     return false;
                 default:
                     return true;

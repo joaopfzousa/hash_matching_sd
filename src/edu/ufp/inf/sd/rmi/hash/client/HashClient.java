@@ -2,10 +2,8 @@ package edu.ufp.inf.sd.rmi.hash.client;
 
 import edu.ufp.inf.sd.rmi.hash.server.*;
 import edu.ufp.inf.sd.rmi.hash.server.visitor.*;
-import edu.ufp.inf.sd.rmi.util.States;
 import edu.ufp.inf.sd.rmi.util.rmisetup.SetupContextRMI;
 import edu.ufp.inf.sd.rmi.util.threading.ThreadPool;
-import io.jsonwebtoken.Jwts;
 
 import java.io.*;
 import java.rmi.NotBoundException;
@@ -70,10 +68,10 @@ public class HashClient extends Thread {
     }
 
     private void playService() {
+        String user = null;
         try {
             Scanner in = new Scanner(System.in);
             int option = 0;
-
             System.out.println("\n\n-------------------------------------------");
             System.out.println("-------- Hash Matching Colaborativo -------");
             System.out.println("-------------------------------------------");
@@ -107,7 +105,7 @@ public class HashClient extends Thread {
                     case 2:
                         System.out.println("\n-------> Please Login <---------\n");
                         System.out.print("\nPlease insert your username: ");
-                        String user = in.nextLine();
+                        user = in.nextLine();
                         System.out.print("Please insert your password: ");
                         String password = in.nextLine();
 
@@ -330,7 +328,14 @@ public class HashClient extends Thread {
                 }
             } while (option != -1);
         } catch (RemoteException ex) {
-            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                hashLoginRI.logout(user);
+                playService();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
     }
 

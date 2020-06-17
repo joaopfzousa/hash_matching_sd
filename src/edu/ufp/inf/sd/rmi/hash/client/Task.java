@@ -4,7 +4,6 @@ import edu.ufp.inf.sd.rmi.hash.helpers.bcrypt.BCrypt;
 import edu.ufp.inf.sd.rmi.hash.server.HashSessionRI;
 import edu.ufp.inf.sd.rmi.hash.server.visitor.VisitorHashOperationsI;
 import edu.ufp.inf.sd.rmi.hash.server.visitor.VisitorRequestCredits;
-import edu.ufp.inf.sd.rmi.util.States;
 import edu.ufp.inf.sd.rmi.util.lambdaworks.crypto.SCryptUtil;
 
 import java.rmi.RemoteException;
