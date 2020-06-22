@@ -299,7 +299,6 @@ public class HashClient extends Thread {
                                                 if (wi != null) {
                                                     hashSubjectRI = wi.getHashSubjectRI();
                                                     this.observer = new ObserverImpl(id, this.hashSubjectRI, user);
-                                                    this.observer = new ObserverImpl(id, this.hashSubjectRI, user);
                                                     this.StartWorking(wi);
                                                 } else {
                                                     System.out.println("Não tenho linhas para ler!!!");

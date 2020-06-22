@@ -131,32 +131,36 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
         try {
             TaskGroup tg = db.ListTaskGroups().get(idtask);
 
-            if (tg.getPlafond() == 0 || tg.getPlafond() < credits)
+            if(tg != null)
             {
-                State s = new State(States.NoCredit, tg.getOwner(), tg.getId());
-                tg.getHashSubjectRI().setState(s);
-                db.ListTaskGroups().get(idtask).setPause(true);
-                return false;
-            } else {
-                if(credits == 10)
+                if (tg.getPlafond() == 0 || tg.getPlafond() < credits)
                 {
-                    State s = new State(States.Solved, tg.getOwner(), tg.getId());
+                    State s = new State(States.NoCredit, tg.getOwner(), tg.getId());
                     tg.getHashSubjectRI().setState(s);
-                    db.ListTaskGroups().get(idtask).setSolved(true);
-                }
+                    db.ListTaskGroups().get(idtask).setPause(true);
+                    return false;
+                } else {
 
-                for (User u : db.getUsers())
-                {
-                    if (u.getUname().compareTo(user) == 0)
+                    if(credits == 10)
                     {
-                        u.setCredits(u.getCredits() + credits);
-                        int plafond = tg.getPlafond();
-                        tg.setPlafond(plafond - credits);
-                        db.ListTaskGroups().get(idtask).setPlafond(tg.getPlafond());
-                        break;
+                        State s = new State(States.Solved, tg.getOwner(), tg.getId());
+                        tg.getHashSubjectRI().setState(s);
+                        db.ListTaskGroups().get(idtask).setSolved(true);
                     }
+
+                    for (User u : db.getUsers())
+                    {
+                        if (u.getUname().compareTo(user) == 0)
+                        {
+                            u.setCredits(u.getCredits() + credits);
+                            int plafond = tg.getPlafond();
+                            tg.setPlafond(plafond - credits);
+                            db.ListTaskGroups().get(idtask).setPlafond(tg.getPlafond());
+                            break;
+                        }
+                    }
+                    return true;
                 }
-                return true;
             }
         } catch (Exception e) {
             System.out.println("[SingletonOperationsTaskGroups] - RequestCredits: " + e);
