@@ -2,8 +2,6 @@ package edu.ufp.inf.sd.rmi.hash.server;
 
 import edu.ufp.inf.sd.rmi.util.rmisetup.SetupContextRMI;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.util.logging.Level;
@@ -12,8 +10,6 @@ import java.util.logging.Logger;
 public class HashServer {
 
     private SetupContextRMI contextRMI;
-
-    private HashSubjectRI myRI;
 
     public static void main(String[] args) {
         if (args != null && args.length < 3) {
@@ -40,19 +36,7 @@ public class HashServer {
         try {
             Registry registry = contextRMI.getRegistry();
             if (registry != null) {
-
-                BufferedReader reader = null;
-                int lines = 0;
-                try {
-                    reader = new BufferedReader(new FileReader("/Users/joaopfzousa/IdeaProjects/SD_Project/files/passwords.txt"));
-                    while (reader.readLine() != null) lines++;
-                    reader.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                DBMockup db = new DBMockup(lines);
-                HashLoginRI digLibLoginRI = new HashLoginImpl(db);
+                HashLoginRI digLibLoginRI = new HashLoginImpl();
                 String serviceUrl = contextRMI.getServicesUrl(0);
                 registry.rebind(serviceUrl, digLibLoginRI);
             } else {

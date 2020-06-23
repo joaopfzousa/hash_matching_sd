@@ -17,15 +17,15 @@ public class HashSessionImpl extends UnicastRemoteObject implements HashSessionR
 
     private static String SECRET_KEY = "b2xhRXVRdWVyb0JhdGF0aW5oYXNDb21BcnJvemVQYW5hZG9zMTIzOTg3";
 
-    private DBMockup database;
+    //private DBMockup database;
 
     public SingletonOperationsTaskGroups stateTaskGroup;
 
     public String jwt;
 
-    public HashSessionImpl(DBMockup db, String username) throws RemoteException {
+    public HashSessionImpl(/*DBMockup db,*/ String username) throws RemoteException {
         super();
-        this.database = db;
+        //this.database = db;
         this.stateTaskGroup = SingletonOperationsTaskGroups.createSingletonOperationsTaskGroups();
         this.jwt = createJWT(username, ttlMillis);
         //System.out.println(username + " JWT = " + this.jwt);
@@ -75,7 +75,7 @@ public class HashSessionImpl extends UnicastRemoteObject implements HashSessionR
         try {
             decodeJWT(this.jwt);
 
-            return visitor.visitConcreteElementStateTasks(this, this.database);
+            return visitor.visitConcreteElementStateTasks(this);
 
             // we can safely trust the JWT
         }catch (ExpiredJwtException ex) {

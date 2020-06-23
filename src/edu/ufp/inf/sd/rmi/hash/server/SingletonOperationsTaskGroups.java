@@ -3,6 +3,8 @@ package edu.ufp.inf.sd.rmi.hash.server;
 import edu.ufp.inf.sd.rmi.hash.client.ObserverImpl;
 import edu.ufp.inf.sd.rmi.util.States;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 
 public class SingletonOperationsTaskGroups implements SingletonOperationsI {
@@ -17,20 +19,22 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
     }
 
     @Override
-    public ArrayList<TaskGroup> ListTaskGroup(DBMockup db) {
-        return db.ListTaskGroups();
+    public ArrayList<TaskGroup> ListTaskGroup(/*DBMockup db*/) {
+        return DBMockup.ListTaskGroups();
     }
 
     @Override
-    public boolean CreateTaskGroup(TaskGroup taskgroup, DBMockup db) {
+    public boolean CreateTaskGroup(TaskGroup taskgroup) {
 
         try {
 
-            ArrayList<TaskGroup> tasks = db.ListTaskGroups();
+            int lines = getLines();
+
+            ArrayList<TaskGroup> tasks = DBMockup.ListTaskGroups();
 
             int id;
             if (tasks.size() > 0)
-                id = tasks.get(db.ListTaskGroups().size() - 1).getId() + 1;
+                id = tasks.get(DBMockup.ListTaskGroups().size() - 1).getId() + 1;
             else
                 id = 0;
 
@@ -38,7 +42,6 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
             taskgroup.setPause(false);
             taskgroup.setSolved(false);
 
-            int lines = db.getLines();
             float subsets = (float) lines / 10;
             double new_subets = Math.ceil(subsets);
 
@@ -46,17 +49,17 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
             taskgroup.setLine(0);
             taskgroup.setHashSubjectRI(new HashSubjectImpl(id));
             taskgroup.setObserver(new ObserverImpl(id, taskgroup.getHashSubjectRI(), taskgroup.getOwner()));
-            for (int i = 0; i < db.getUsers().size(); i++) {
-                if (db.getUsers().get(i).getUname().compareTo(taskgroup.getOwner()) == 0) {
-                    if (!(db.getUsers().get(i).getCredits() < taskgroup.getPlafond()))
+            for (int i = 0; i < DBMockup.getUsers().size(); i++) {
+                if (DBMockup.getUsers().get(i).getUname().compareTo(taskgroup.getOwner()) == 0) {
+                    if (!(DBMockup.getUsers().get(i).getCredits() < taskgroup.getPlafond()))
                     {
-                        db.getUsers().get(i).setCredits(db.getUsers().get(i).getCredits() - taskgroup.getPlafond());
+                        DBMockup.getUsers().get(i).setCredits(DBMockup.getUsers().get(i).getCredits() - taskgroup.getPlafond());
                         break;
                     }else
                         return false;
                 }
             }
-            db.AddTaskGroup(taskgroup);
+            DBMockup.AddTaskGroup(taskgroup);
         } catch (Exception e) {
             System.out.println("[SingletonOperationsTaskGroups] - Create: " + e);
         }
@@ -64,13 +67,15 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
     }
 
     @Override
-    public WorkerInput JoinTaskGroup(String user, int id, DBMockup db) {
+    public WorkerInput JoinTaskGroup(String user, int id) {
         try {
-            TaskGroup tg = db.ListTaskGroups().get(id);
+            TaskGroup tg = DBMockup.ListTaskGroups().get(id);
 
-            boolean join = db.JoinWorkerinTaskGroup(tg, user);
+            boolean join = DBMockup.JoinWorkerinTaskGroup(tg, user);
 
-            if (join && tg.getLine() < db.getLines()) {
+
+
+            if (join && tg.getLine() < getLines()) {
                 WorkerInput wi = new WorkerInput(tg.getId(), tg.getLine(), tg.getSubsets(), tg.getHash(), tg.getEncryption(), tg.getStrategy(), "/Users/joaopfzousa/IdeaProjects/SD_Project/files/passwords.txt", tg.getHashSubjectRI(), user);
 
                 tg.setLine(tg.getLine() + tg.getSubsets() + 1);
@@ -84,20 +89,20 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
     }
 
     @Override
-    public boolean PauseTaskGroup(Integer idtask, DBMockup db) {
+    public boolean PauseTaskGroup(Integer idtask/*, DBMockup db*/) {
         try {
-            TaskGroup tg = db.ListTaskGroups().get(idtask);
+            TaskGroup tg = DBMockup.ListTaskGroups().get(idtask);
 
-            boolean isPause = db.PauseTaskGroup(tg);
+            boolean isPause = DBMockup.PauseTaskGroup(tg);
 
             if (isPause) {
                 State s = new State(States.Pause, tg.getOwner(), tg.getId());
                 tg.getHashSubjectRI().setState(s);
-                db.ListTaskGroups().get(idtask).setPause(true);
+                DBMockup.ListTaskGroups().get(idtask).setPause(true);
             } else {
                 State s = new State(States.UnPause, tg.getOwner(), tg.getId());
                 tg.getHashSubjectRI().setState(s);
-                db.ListTaskGroups().get(idtask).setPause(false);
+                DBMockup.ListTaskGroups().get(idtask).setPause(false);
             }
 
             return isPause;
@@ -108,11 +113,11 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
     }
 
     @Override
-    public boolean DeleteTaskGroup(Integer idtask, DBMockup db) {
+    public boolean DeleteTaskGroup(Integer idtask/*, DBMockup db*/) {
         try {
-            TaskGroup tg = db.ListTaskGroups().get(idtask);
+            TaskGroup tg = DBMockup.ListTaskGroups().get(idtask);
 
-            boolean delete = db.DeleteTaskGroup(tg);
+            boolean delete = DBMockup.DeleteTaskGroup(tg);
 
             if (delete) {
                 State s = new State(States.Deleted, tg.getOwner(), tg.getId());
@@ -127,9 +132,9 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
     }
 
     @Override
-    public boolean RequestCredits(int idtask, String user, int credits, DBMockup db) {
+    public boolean RequestCredits(int idtask, String user, int credits/*, DBMockup db*/) {
         try {
-            TaskGroup tg = db.ListTaskGroups().get(idtask);
+            TaskGroup tg = DBMockup.ListTaskGroups().get(idtask);
 
             if(tg != null)
             {
@@ -137,7 +142,7 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
                 {
                     State s = new State(States.NoCredit, tg.getOwner(), tg.getId());
                     tg.getHashSubjectRI().setState(s);
-                    db.ListTaskGroups().get(idtask).setPause(true);
+                    DBMockup.ListTaskGroups().get(idtask).setPause(true);
                     return false;
                 } else {
 
@@ -145,17 +150,17 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
                     {
                         State s = new State(States.Solved, tg.getOwner(), tg.getId());
                         tg.getHashSubjectRI().setState(s);
-                        db.ListTaskGroups().get(idtask).setSolved(true);
+                        DBMockup.ListTaskGroups().get(idtask).setSolved(true);
                     }
 
-                    for (User u : db.getUsers())
+                    for (User u : DBMockup.getUsers())
                     {
                         if (u.getUname().compareTo(user) == 0)
                         {
                             u.setCredits(u.getCredits() + credits);
                             int plafond = tg.getPlafond();
                             tg.setPlafond(plafond - credits);
-                            db.ListTaskGroups().get(idtask).setPlafond(tg.getPlafond());
+                            DBMockup.ListTaskGroups().get(idtask).setPlafond(tg.getPlafond());
                             break;
                         }
                     }
@@ -166,6 +171,20 @@ public class SingletonOperationsTaskGroups implements SingletonOperationsI {
             System.out.println("[SingletonOperationsTaskGroups] - RequestCredits: " + e);
         }
         return false;
+    }
+
+    public int getLines()
+    {
+        BufferedReader reader = null;
+        int lines = 0;
+        try {
+            reader = new BufferedReader(new FileReader("/Users/joaopfzousa/IdeaProjects/SD_Project/files/passwords.txt"));
+            while (reader.readLine() != null) lines++;
+            reader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lines;
     }
 
 }

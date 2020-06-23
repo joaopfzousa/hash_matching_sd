@@ -7,16 +7,17 @@ import java.util.ArrayList;
  */
 public class DBMockup {
 
-    private final ArrayList<User> users;// = new ArrayList();
+    private static ArrayList<User> users = new ArrayList();
 
-    private ArrayList<TaskGroup> taskGroups;// = new ArrayList<>();
+    private static ArrayList<TaskGroup> taskGroups = new ArrayList<>();
 
-    private int lines;
+    //private static int lines;
 
 
     /**
      * This constructor creates and inits the database with some users.
      */
+    /*
     public DBMockup(int lines) {
 
         users = new ArrayList<>();
@@ -29,7 +30,7 @@ public class DBMockup {
 
         taskGroups = new ArrayList<>();
         this.lines = lines;
-    }
+    }*/
 
     /**
      * Registers a new user.
@@ -38,7 +39,7 @@ public class DBMockup {
      * @param p passwd
      * @param credits n creditos
      */
-    public boolean register(String u, String p, int credits) {
+    public static boolean register(String u, String p, int credits) {
         if (!exists(u, p)) {
             users.add(new User(u, p, credits));
             return true;
@@ -53,8 +54,8 @@ public class DBMockup {
      * @param p passwd
      * @return
      */
-    public boolean exists(String u, String p) {
-        for (User usr : this.users) {
+    public static boolean exists(String u, String p) {
+        for (User usr : users) {
             if (usr.getUname().compareTo(u) == 0 && usr.getPword().compareTo(p) == 0) {
                 return true;
             }
@@ -63,28 +64,28 @@ public class DBMockup {
         //return ((u.equalsIgnoreCase("guest") && p.equalsIgnoreCase("ufp")) ? true : false);
     }
 
-    public ArrayList<TaskGroup> ListTaskGroups()
+    public static ArrayList<TaskGroup> ListTaskGroups()
     {
-        return  this.taskGroups;
+        return  taskGroups;
     }
 
-    public boolean AddTaskGroup(TaskGroup tg)
+    public static boolean AddTaskGroup(TaskGroup tg)
     {
-        this.taskGroups.add(tg);
+        taskGroups.add(tg);
         return true;
     }
 
-    public boolean DeleteTaskGroup(TaskGroup tg)
+    public static boolean DeleteTaskGroup(TaskGroup tg)
     {
-        if (this.taskGroups.contains(tg))
+        if (taskGroups.contains(tg))
         {
-            this.taskGroups.remove(tg);
+            taskGroups.remove(tg);
             return true;
         }
         return false;
     }
 
-    public boolean PauseTaskGroup(TaskGroup tg)
+    public static boolean PauseTaskGroup(TaskGroup tg)
     {
         for(TaskGroup tk : taskGroups)
         {
@@ -97,18 +98,18 @@ public class DBMockup {
         return false;
     }
 
-    public boolean JoinWorkerinTaskGroup(TaskGroup tg, String u)
+    public static boolean JoinWorkerinTaskGroup(TaskGroup tg, String u)
     {
         tg.getUsers().add(u);
         return true;
     }
 
-    public ArrayList<User> getUsers() {
+    public static ArrayList<User> getUsers() {
         return users;
     }
 
-    public int getLines() {
+    /*
+    public static int getLines() {
         return lines;
-    }
-
+    }*/
 }

@@ -19,8 +19,8 @@ public class VisitorJoinTaskGroup implements VisitorHashOperationsI, Serializabl
     }
 
     @Override
-    public Object visitConcreteElementStateTasks(HashSessionRI element, DBMockup db) {
+    public Object visitConcreteElementStateTasks(HashSessionRI element) {
         SingletonOperationsTaskGroups sTaskGroup = ((HashSessionImpl)element).getStateTaskGroup();
-        return sTaskGroup.JoinTaskGroup(user, id, db);
+        return sTaskGroup.JoinTaskGroup(user, id);
     }
 }

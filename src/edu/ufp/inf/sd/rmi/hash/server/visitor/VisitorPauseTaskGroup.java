@@ -16,8 +16,8 @@ public class VisitorPauseTaskGroup implements VisitorHashOperationsI, Serializab
     }
 
     @Override
-    public Object visitConcreteElementStateTasks(HashSessionRI element, DBMockup db) {
+    public Object visitConcreteElementStateTasks(HashSessionRI element) {
         SingletonOperationsTaskGroups sTaskGroup = ((HashSessionImpl)element).getStateTaskGroup();
-        return sTaskGroup.PauseTaskGroup(idtask, db);
+        return sTaskGroup.PauseTaskGroup(idtask);
     }
 }

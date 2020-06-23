@@ -13,8 +13,8 @@ public class VisitorCreateTaskGroup implements VisitorHashOperationsI, Serializa
     }
 
     @Override
-    public Object visitConcreteElementStateTasks(HashSessionRI element, DBMockup db) {
+    public Object visitConcreteElementStateTasks(HashSessionRI element) {
         SingletonOperationsTaskGroups sTaskGroup = ((HashSessionImpl)element).getStateTaskGroup();
-        return sTaskGroup.CreateTaskGroup(this.taskGroup, db);
+        return sTaskGroup.CreateTaskGroup(this.taskGroup);
     }
 }

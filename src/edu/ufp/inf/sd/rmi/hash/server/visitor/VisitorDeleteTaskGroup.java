@@ -15,8 +15,8 @@ public class VisitorDeleteTaskGroup implements VisitorHashOperationsI, Serializa
         this.idtask = idtask;
     }
     @Override
-    public Object visitConcreteElementStateTasks(HashSessionRI element, DBMockup db) {
+    public Object visitConcreteElementStateTasks(HashSessionRI element) {
         SingletonOperationsTaskGroups sTaskGroup = ((HashSessionImpl)element).getStateTaskGroup();
-        return sTaskGroup.DeleteTaskGroup(idtask, db);
+        return sTaskGroup.DeleteTaskGroup(idtask);
     }
 }

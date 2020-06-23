@@ -10,9 +10,9 @@ import java.io.Serializable;
 public class VisitorListTaskGroup implements VisitorHashOperationsI, Serializable {
 
     @Override
-    public Object visitConcreteElementStateTasks(HashSessionRI element, DBMockup db) {
+    public Object visitConcreteElementStateTasks(HashSessionRI element) {
         SingletonOperationsTaskGroups sTaskGroup = ((HashSessionImpl)element).getStateTaskGroup();
-        return sTaskGroup.ListTaskGroup(db);
+        return sTaskGroup.ListTaskGroup();
     }
 
 }

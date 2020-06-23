@@ -21,8 +21,8 @@ public class VisitorRequestCredits implements VisitorHashOperationsI, Serializab
     }
 
     @Override
-    public Object visitConcreteElementStateTasks(HashSessionRI element, DBMockup db) {
+    public Object visitConcreteElementStateTasks(HashSessionRI element) {
         SingletonOperationsTaskGroups sTaskGroup = ((HashSessionImpl)element).getStateTaskGroup();
-        return sTaskGroup.RequestCredits(idtask,user,credits,db);
+        return sTaskGroup.RequestCredits(idtask,user,credits);
     }
 }

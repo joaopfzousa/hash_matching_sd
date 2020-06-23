@@ -8,15 +8,15 @@ import java.util.HashMap;
 public class HashLoginImpl extends UnicastRemoteObject implements HashLoginRI {
 
     private HashMap<String, HashSessionRI> sessions = new HashMap<>();
-    private DBMockup database;
+    //private DBMockup database;
 
-    public HashLoginImpl(DBMockup db) throws RemoteException {
+    public HashLoginImpl(/*DBMockup db*/) throws RemoteException {
         super();
-        this.database = db;
+        //this.database = db;
     }
     @Override
     public boolean register(String username, String password, int credits) throws RemoteException {
-        boolean register = this.database.register(username, password, credits);
+        boolean register = DBMockup.register(username, password, credits);
         return register;
     }
 
@@ -28,9 +28,9 @@ public class HashLoginImpl extends UnicastRemoteObject implements HashLoginRI {
             return this.sessions.get(username);
         }
 
-        if (this.database.exists(username, password))
+        if (DBMockup.exists(username, password))
         {
-            HashSessionImpl lib = new HashSessionImpl(this.database, username);
+            HashSessionImpl lib = new HashSessionImpl(username);
 
             this.sessions.put(username, lib);
             return lib;

@@ -3,15 +3,15 @@ package edu.ufp.inf.sd.rmi.hash.server;
 import java.util.ArrayList;
 
 public interface SingletonOperationsI {
-    ArrayList<TaskGroup> ListTaskGroup(DBMockup db);
+    ArrayList<TaskGroup> ListTaskGroup();
 
-    boolean CreateTaskGroup(TaskGroup taskgroup, DBMockup db);
+    boolean CreateTaskGroup(TaskGroup taskgroup);
 
-    WorkerInput JoinTaskGroup(String user, int id, DBMockup db);
+    WorkerInput JoinTaskGroup(String user, int id);
 
-    boolean PauseTaskGroup(Integer idtask, DBMockup db);
+    boolean PauseTaskGroup(Integer idtask);
 
-    boolean DeleteTaskGroup(Integer idtask, DBMockup db);
+    boolean DeleteTaskGroup(Integer idtask);
 
-    boolean RequestCredits(int idtask, String user, int credits, DBMockup db);
+    boolean RequestCredits(int idtask, String user, int credits);
 }
