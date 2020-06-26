@@ -37,6 +37,8 @@ public class HashServer {
             Registry registry = contextRMI.getRegistry();
             if (registry != null) {
                 HashLoginRI digLibLoginRI = new HashLoginImpl();
+                DBMockup.register("hugo", "ufp",20000);
+                DBMockup.register("joao", "ufp",10000);
                 String serviceUrl = contextRMI.getServicesUrl(0);
                 registry.rebind(serviceUrl, digLibLoginRI);
             } else {

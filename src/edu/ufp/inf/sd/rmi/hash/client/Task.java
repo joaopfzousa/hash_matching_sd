@@ -50,7 +50,6 @@ class Task implements Runnable
             {
                 try {
                     String securePassword = "";
-
                     switch (this.encrypt)
                     {
                         case (1):
@@ -75,6 +74,7 @@ class Task implements Runnable
                             break;
                     }
 
+                    System.out.println("Estou a testar a linha " + this.line + " com a palavra " +  this.palavra/* + "\n com a hash \n" + securePassword + "\n\n"*/);
                     Thread.sleep(1000);
                     VisitorHashOperationsI v = null;
 

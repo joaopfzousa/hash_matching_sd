@@ -1,24 +1,24 @@
 package edu.ufp.inf.sd.rmi.hash.helpers.advanced;
 
+import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 
 public final class ReallyStrongSecuredPassword
 {
 	public static String generateStrongPasswordHash(String password) throws NoSuchAlgorithmException, InvalidKeySpecException
 	{
 		int iterations = 1000;
-		char[] chars = password.toCharArray();
 		byte[] salt = getSalt().getBytes();
-		
-		PBEKeySpec spec = new PBEKeySpec(chars, salt, iterations, 64 * 8);
-		SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-		byte[] hash = skf.generateSecret(spec).getEncoded();
-		return iterations + ":" + toHex(salt) + ":" + toHex(hash);
-				
+
+		KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, 128);
+		SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+		byte[] hash = factory.generateSecret(spec).getEncoded();
+		 return toHex(hash);
 	}
 	
 	public static String getSalt() throws NoSuchAlgorithmException
@@ -28,7 +28,7 @@ public final class ReallyStrongSecuredPassword
 		//sr.nextBytes(salt);
 		return "[B@2096442d";
 	}
-	
+
 	private static String toHex(byte[] array) throws NoSuchAlgorithmException
 	{
 		BigInteger bi = new BigInteger(1, array);
